@@ -173,7 +173,7 @@ const openModal = () => {
 
 onMounted(async () => {
   setInterval(nextSlide, 5000);
-  const response = await fetch('src/selfit.csv');
+  const response = await fetch('public/selfit.csv');
   const csvData = await response.text();
   Papa.parse(csvData, {
     delimiter: ';',
