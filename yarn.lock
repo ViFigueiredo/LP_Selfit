@@ -348,12 +348,26 @@
   resolved "https://registry.yarnpkg.com/@types/json-schema/-/json-schema-7.0.15.tgz#596a1747233694d50f6ad8a7869fcb6f56cf5841"
   integrity sha512-5+fP8P8MFNC+AyZCDxrB2pkZFPGzqQWUzpSeuuVLvm8VMcorNYavBqoFcxK8bQz4Qsbn4oUEEem4wDLfcysGHA==
 
+"@types/node@*":
+  version "20.12.4"
+  resolved "https://registry.yarnpkg.com/@types/node/-/node-20.12.4.tgz#af5921bd75ccdf3a3d8b3fa75bf3d3359268cd11"
+  integrity sha512-E+Fa9z3wSQpzgYQdYmme5X3OTuejnnTx88A6p6vkkJosR3KBz+HpE3kqNm98VE6cfLFcISx7zW7MsJkH6KwbTw==
+  dependencies:
+    undici-types "~5.26.4"
+
 "@types/node@^20.11.10":
   version "20.11.24"
   resolved "https://registry.yarnpkg.com/@types/node/-/node-20.11.24.tgz#cc207511104694e84e9fb17f9a0c4c42d4517792"
   integrity sha512-Kza43ewS3xoLgCEpQrsT+xRo/EJej1y0kVYGiLFE1NEODXGzTfwiC6tXTLMQskn1X4/Rjlh0MQUvx9W+L9long==
   dependencies:
     undici-types "~5.26.4"
+
+"@types/papaparse@^5.3.14":
+  version "5.3.14"
+  resolved "https://registry.yarnpkg.com/@types/papaparse/-/papaparse-5.3.14.tgz#345cc2a675a90106ff1dc33b95500dfb30748031"
+  integrity sha512-LxJ4iEFcpqc6METwp9f6BV6VVc43m6MfH0VqFosHvrUgfXiFe6ww7R3itkOQ+TCK6Y+Iv/+RnnvtRZnkc5Kc9g==
+  dependencies:
+    "@types/node" "*"
 
 "@types/semver@^7.5.0":
   version "7.5.8"
