@@ -95,17 +95,29 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted } from 'vue'; // Importa referências e o método onMounted do Vue
-import type Papa from 'papaparse';
+import { ref, onMounted } from 'vue';
+import Papa from 'papaparse';
 
-const showModal = ref(false);
-const selfit = ref([]);
-const cidades = ref([]);
-const cidadesComUnidades = ref([]);
-const banner = 'https://www.selfitacademias.com.br/images/banner_verao_desktop.jpg';
+interface SelfitData {
+  UF: string;
+  CIDADE: string;
+  UNIDADE: string;
+  ENDEREÇO: string;
+  URL: string;
+  showUnidades: boolean;
+}
 
-// Items do carrosel
-const data = [
+const showModal = ref<boolean>(false);
+const selfit = ref<SelfitData[]>([]);
+const cidades = ref<string[]>([]);
+const cidadesComUnidades = ref<{ nome: string; showUnidades: boolean }[]>([]);
+const banner: string = 'https://www.selfitacademias.com.br/images/banner_verao_desktop.jpg';
+const data: {
+  imgSrc: string;
+  imgAlt: string;
+  title: string;
+  description: string;
+}[] = [
   {
     imgSrc: 'https://www.selfitacademias.com.br/images/aselfit-intense.jpg',
     imgAlt: 'selfit-intense',
@@ -142,44 +154,36 @@ const data = [
       'O Self Velo é um espaço completo para treino aeróbico e fortalecimento do sistema cardiovascular. Equipado com esteiras, bicicletas, remos, simuladores de escadas e elípticos, proporciona uma experiência abrangente para aprimorar sua resistência e saúde cardiovascular.'
   }
 ];
+const currentIndex = ref<number>(0);
+const carouselItems =
+  ref<{ imgSrc: string; imgAlt: string; title: string; description: string }[]>(data);
 
-const currentIndex = ref(0); // Índice atual do carrossel
-const carouselItems = ref(data); // Referência para os itens do carrossel
-
-// Função para avançar o carrossel
 const nextSlide = () => {
   currentIndex.value = (currentIndex.value + 1) % carouselItems.value.length;
 };
 
-// Função para retroceder o carrossel
 const prevSlide = () => {
   currentIndex.value =
     (currentIndex.value - 1 + carouselItems.value.length) % carouselItems.value.length;
 };
 
-const unidades = (cidade) => {
+const unidades = (cidade: string): string[] => {
   return selfit.value.filter((item) => item.CIDADE === cidade).map((item) => item.UNIDADE);
 };
 
-const toggleUnidades = (index) => {
+const toggleUnidades = (index: number) => {
   cidadesComUnidades.value[index].showUnidades = !cidadesComUnidades.value[index].showUnidades;
 };
 
-const openUnidadeUrl = (unidade) => {
+const openUnidadeUrl = (unidade: string) => {
   const unidadeObj = selfit.value.find((item) => item.UNIDADE === unidade);
   if (unidadeObj && unidadeObj.URL) {
     window.open(unidadeObj.URL, '_blank');
   }
 };
 
-const openModal = () => {
-  showModal.value = !showModal.value;
-};
-
-// Inicializa o carrossel quando o componente for montado
-// Carrega o csv contendo as unidades
 onMounted(async () => {
-  setInterval(nextSlide, 5000); // Alterna os slides a cada 5 segundos
+  setInterval(nextSlide, 5000);
   const response = await fetch('src/selfit.csv');
   const csvData = await response.text();
   Papa.parse(csvData, {
@@ -188,14 +192,14 @@ onMounted(async () => {
     dynamicTyping: true,
     complete: (results) => {
       const formattedData = results.data
-        .map((row) => {
+        .map((row: Record<string, string>) => {
           const values = Object.values(row)[0];
           if (values) {
             const [UF, CIDADE, UNIDADE, ENDEREÇO, URL] = values.split(';');
             return { UF, CIDADE, UNIDADE, ENDEREÇO, URL, showUnidades: false };
           }
         })
-        .filter(Boolean); // remove entradas nulas
+        .filter(Boolean) as SelfitData[];
       selfit.value = JSON.parse(JSON.stringify(formattedData));
       const tempCidades = selfit.value.map((obj) => obj.CIDADE);
       const set = new Set(tempCidades);
@@ -205,7 +209,6 @@ onMounted(async () => {
         nome: cidade,
         showUnidades: false
       }));
-      console.log(selfit.value);
     }
   });
 });
