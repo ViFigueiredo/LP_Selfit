@@ -16,7 +16,7 @@
     <button
       class="absolute top-[45%] right-[3%] p-5 rounded-xl bg-red-600 hover:bg-gray-400 flex text-white hover:text-red-600 font-bold text-2xl"
     >
-      <span @click="openModal">SELECIONAR UNIDADE</span>
+      <span @click="toggleModal">SELECIONAR UNIDADE</span>
     </button>
   </div>
 
@@ -24,10 +24,12 @@
     id="modal-shadow"
     class="absolute z-10 top-0 w-[100%] h-[100%] bg-black/[0.6] flex items-center justify-center"
     v-if="showModal"
+    @click="toggleModal"
   >
     <div
       id="modal"
       class="bg-black overflow-y-auto p-6 w-[50%] h-[50%] rounded-xl flex flex-col space-y-5 z-10"
+      @click.stop
     >
       <ul v-for="(cidade, index) in cidadesComUnidades" :key="index">
         <li
@@ -167,8 +169,10 @@ const openUnidadeUrl = (unidade) => {
   }
 };
 
-const openModal = () => {
-  showModal.value = !showModal.value;
+const toggleModal = (event) => {
+  if (event.target.id === 'modal-shadow' || event.target.innerText === 'SELECIONAR UNIDADE') {
+    showModal.value = !showModal.value;
+  }
 };
 
 onMounted(async () => {
