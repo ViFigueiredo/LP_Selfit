@@ -94,30 +94,16 @@
   <footer>2024 Selfit © Todos os direitos reservados. Desenvolvido por Avantti Consultoria</footer>
 </template>
 
-<script setup lang="ts">
+<script setup lang="js">
 import { ref, onMounted } from 'vue';
 import Papa from 'papaparse';
 
-interface SelfitData {
-  UF: string;
-  CIDADE: string;
-  UNIDADE: string;
-  ENDEREÇO: string;
-  URL: string;
-  showUnidades: boolean;
-}
-
-const showModal = ref<boolean>(false);
-const selfit = ref<SelfitData[]>([]);
-const cidades = ref<string[]>([]);
-const cidadesComUnidades = ref<{ nome: string; showUnidades: boolean }[]>([]);
-const banner: string = 'https://www.selfitacademias.com.br/images/banner_verao_desktop.jpg';
-const data: {
-  imgSrc: string;
-  imgAlt: string;
-  title: string;
-  description: string;
-}[] = [
+const showModal = ref(false);
+const selfit = ref([]);
+const cidades = ref([]);
+const cidadesComUnidades = ref([]);
+const banner = 'https://www.selfitacademias.com.br/images/banner_verao_desktop.jpg';
+const data = [
   {
     imgSrc: 'https://www.selfitacademias.com.br/images/aselfit-intense.jpg',
     imgAlt: 'selfit-intense',
@@ -154,9 +140,8 @@ const data: {
       'O Self Velo é um espaço completo para treino aeróbico e fortalecimento do sistema cardiovascular. Equipado com esteiras, bicicletas, remos, simuladores de escadas e elípticos, proporciona uma experiência abrangente para aprimorar sua resistência e saúde cardiovascular.'
   }
 ];
-const currentIndex = ref<number>(0);
-const carouselItems =
-  ref<{ imgSrc: string; imgAlt: string; title: string; description: string }[]>(data);
+const currentIndex = ref(0);
+const carouselItems = ref(data);
 
 const nextSlide = () => {
   currentIndex.value = (currentIndex.value + 1) % carouselItems.value.length;
@@ -167,19 +152,23 @@ const prevSlide = () => {
     (currentIndex.value - 1 + carouselItems.value.length) % carouselItems.value.length;
 };
 
-const unidades = (cidade: string): string[] => {
+const unidades = (cidade) => {
   return selfit.value.filter((item) => item.CIDADE === cidade).map((item) => item.UNIDADE);
 };
 
-const toggleUnidades = (index: number) => {
+const toggleUnidades = (index) => {
   cidadesComUnidades.value[index].showUnidades = !cidadesComUnidades.value[index].showUnidades;
 };
 
-const openUnidadeUrl = (unidade: string) => {
+const openUnidadeUrl = (unidade) => {
   const unidadeObj = selfit.value.find((item) => item.UNIDADE === unidade);
   if (unidadeObj && unidadeObj.URL) {
     window.open(unidadeObj.URL, '_blank');
   }
+};
+
+const openModal = () => {
+  showModal.value = !showModal.value;
 };
 
 onMounted(async () => {
@@ -192,14 +181,14 @@ onMounted(async () => {
     dynamicTyping: true,
     complete: (results) => {
       const formattedData = results.data
-        .map((row: Record<string, string>) => {
+        .map((row) => {
           const values = Object.values(row)[0];
           if (values) {
             const [UF, CIDADE, UNIDADE, ENDEREÇO, URL] = values.split(';');
             return { UF, CIDADE, UNIDADE, ENDEREÇO, URL, showUnidades: false };
           }
         })
-        .filter(Boolean) as SelfitData[];
+        .filter(Boolean);
       selfit.value = JSON.parse(JSON.stringify(formattedData));
       const tempCidades = selfit.value.map((obj) => obj.CIDADE);
       const set = new Set(tempCidades);
