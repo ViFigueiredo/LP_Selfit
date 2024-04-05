@@ -1559,6 +1559,11 @@ p-locate@^5.0.0:
   dependencies:
     p-limit "^3.0.2"
 
+papaparse@^5.3.0, papaparse@^5.4.1:
+  version "5.4.1"
+  resolved "https://registry.yarnpkg.com/papaparse/-/papaparse-5.4.1.tgz#f45c0f871853578bd3a30f92d96fdcfb6ebea127"
+  integrity sha512-HipMsgJkZu8br23pW15uvo6sib6wne/4woLZPlFf3rpDyMe9ywEXUsuD7+6K9PRkJlVT51j/sCOYDKGGS3ZJrw==
+
 parent-module@^1.0.0:
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/parent-module/-/parent-module-1.0.1.tgz#691d2709e78c79fae3a156622452d00762caaaa2"
@@ -2035,6 +2040,13 @@ vue-eslint-parser@^9.3.1, vue-eslint-parser@^9.4.2:
     esquery "^1.4.0"
     lodash "^4.17.21"
     semver "^7.3.6"
+
+vue-papa-parse@^3.1.0:
+  version "3.1.0"
+  resolved "https://registry.yarnpkg.com/vue-papa-parse/-/vue-papa-parse-3.1.0.tgz#a97f8cb65273cecf58df105e0660e8283512725c"
+  integrity sha512-5YdF3Dtf49EGfaz3+IgIpUw9yYuvV3HekZkob6jrK/Ffz1aCrWjevtcQByKxrNtK7RAL39B0ca93bogKuiQQKg==
+  dependencies:
+    papaparse "^5.3.0"
 
 vue-template-compiler@^2.7.14:
   version "2.7.16"

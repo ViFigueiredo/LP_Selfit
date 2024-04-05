@@ -12,6 +12,13 @@ module.exports = {
   parserOptions: {
     ecmaVersion: 'latest'
   },
+  "overrides": [
+    {
+      "files": "*.json",
+      "parser": "jsonc-eslint-parser",
+      "rules": {}
+    }
+  ],
   rules: {
     'vue/no-parsing-error': 0
   }

@@ -1,6 +1,107 @@
-<script setup lang="ts">
-import { ref, onMounted } from 'vue'; // Importa referências e o método onMounted do Vue
+<template>
+  <header class="w-full relative">
+    <img :src="banner" alt="banner" />
 
+    <button class="btn-zap">
+      <img src="./assets/img/whatsapp.png" alt="" />
+      <a
+        href="https://wa.me//5581981717978?text=Quero+conhecer+mais+sobre+as+academias+da+Selfit..."
+        >Fale conosco</a
+      >
+    </button>
+  </header>
+
+  <div class="oferta-wraper relative w-full space-x-10 bg-black">
+    <img class="" src="./assets/img/oferta.png" alt="plano plus" />
+    <button
+      class="absolute top-[45%] right-[3%] p-5 rounded-xl bg-red-600 hover:bg-gray-400 flex text-white hover:text-red-600 font-bold text-2xl"
+    >
+      <span @click="openModal">SELECIONAR UNIDADE</span>
+    </button>
+  </div>
+
+  <div
+    id="modal-shadow"
+    class="absolute z-10 top-0 w-[100%] h-[100%] bg-black/[0.6] flex items-center justify-center"
+    v-if="showModal"
+  >
+    <div
+      id="modal"
+      class="bg-black overflow-y-auto p-6 w-[50%] h-[50%] rounded-xl flex flex-col space-y-5 z-10"
+    >
+      <ul v-for="(cidade, index) in cidadesComUnidades" :key="index">
+        <li
+          class="cursor-pointer text-white hover:text-red-600 font-bold"
+          @click="toggleUnidades(index)"
+        >
+          {{ cidade.nome }}
+        </li>
+        <div id="unidade" class="showUnidade space-y-3" v-if="cidade.showUnidades">
+          <span
+            v-for="unidade in unidades(cidade.nome)"
+            :key="unidade"
+            class="cursor-pointer font-bold hover:text-green-300 hover:underline"
+            @click="openUnidadeUrl(unidade)"
+            >{{ unidade }}
+          </span>
+        </div>
+      </ul>
+    </div>
+  </div>
+
+  <div class="w-full flex justify-center my-5 px-5 space-x-5">
+    <div id="carousel" class="relative h-80 w-[50%]">
+      <div
+        v-for="(item, index) in carouselItems"
+        :key="index"
+        :class="{ hidden: index !== currentIndex, block: index === currentIndex }"
+      >
+        <img id="img-carousel" :src="item.imgSrc" :alt="item.imgAlt" />
+        <div id="text-carousel" class="absolute w-full bottom-0 p-7 text-white">
+          <h2 class="font-bold text-2xl">{{ item.title }}</h2>
+          <span>{{ item.description }}</span>
+        </div>
+
+        <button class="btn-carousel btn-l absolute" @click="prevSlide">
+          <link
+            rel="stylesheet"
+            href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200"
+          />
+          <span class="material-symbols-outlined"> navigate_before </span>
+        </button>
+        <button class="btn-carousel btn-r absolute" @click="nextSlide">
+          <link
+            rel="stylesheet"
+            href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200"
+          />
+          <span class="material-symbols-outlined"> navigate_next </span>
+        </button>
+      </div>
+    </div>
+
+    <div id="video" class="w-[50%] rounded">
+      <iframe
+        src="https://www.youtube.com/embed/vh0zLxOPKB4"
+        title="Selfit - Academia do seu jeito"
+        frameborder="0"
+        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+        allowfullscreen
+        class="w-full h-full rounded-xl"
+      ></iframe>
+    </div>
+  </div>
+
+  <footer>2024 Selfit © Todos os direitos reservados. Desenvolvido por Avantti Consultoria</footer>
+</template>
+
+<script setup lang="js">
+import { ref, onMounted } from 'vue'; // Importa referências e o método onMounted do Vue
+import Papa from 'papaparse';
+
+const showModal = ref(false);
+const selfit = ref([]);
+const cidades = ref([]);
+const cidadesComUnidades = ref([]);
 const banner = 'https://www.selfitacademias.com.br/images/banner_verao_desktop.jpg';
 
 // Items do carrosel
@@ -56,89 +157,61 @@ const prevSlide = () => {
     (currentIndex.value - 1 + carouselItems.value.length) % carouselItems.value.length;
 };
 
+const unidades = (cidade) => {
+  return selfit.value.filter((item) => item.CIDADE === cidade).map((item) => item.UNIDADE);
+};
+
+const toggleUnidades = (index) => {
+  cidadesComUnidades.value[index].showUnidades = !cidadesComUnidades.value[index].showUnidades;
+};
+
+const openUnidadeUrl = (unidade) => {
+  const unidadeObj = selfit.value.find((item) => item.UNIDADE === unidade);
+  if (unidadeObj && unidadeObj.URL) {
+    window.open(unidadeObj.URL, '_blank');
+  }
+};
+
+const openModal = () => {
+  showModal.value = !showModal.value;
+};
+
 // Inicializa o carrossel quando o componente for montado
-onMounted(() => {
+// Carrega o csv contendo as unidades
+onMounted(async () => {
   setInterval(nextSlide, 5000); // Alterna os slides a cada 5 segundos
+  const response = await fetch('src/selfit.csv');
+  const csvData = await response.text();
+  Papa.parse(csvData, {
+    delimiter: ';',
+    header: true,
+    dynamicTyping: true,
+    complete: (results) => {
+      const formattedData = results.data
+        .map((row) => {
+          const values = Object.values(row)[0];
+          if (values) {
+            const [UF, CIDADE, UNIDADE, ENDEREÇO, URL] = values.split(';');
+            return { UF, CIDADE, UNIDADE, ENDEREÇO, URL, showUnidades: false };
+          }
+        })
+        .filter(Boolean); // remove entradas nulas
+      selfit.value = JSON.parse(JSON.stringify(formattedData));
+      const tempCidades = selfit.value.map((obj) => obj.CIDADE);
+      const set = new Set(tempCidades);
+      const uniqueCidades = Array.from(set);
+      cidades.value = uniqueCidades.sort();
+      cidadesComUnidades.value = cidades.value.map((cidade) => ({
+        nome: cidade,
+        showUnidades: false
+      }));
+      console.log(selfit.value);
+    }
+  });
 });
 </script>
 
-<template>
-  <header class="w-full relative">
-    <img :src="banner" alt="banner" />
-
-    <button class="btn-zap">
-      <img src="./assets/img/whatsapp.png" alt="" />
-      <a
-        href="https://wa.me//5581981717978?text=Quero+conhecer+mais+sobre+as+academias+da+Selfit..."
-        >Fale conosco</a
-      >
-    </button>
-  </header>
-
-  <div class="oferta-wraper">
-    <img class="" src="./assets/img/oferta.png" alt="plano plus" />
-  </div>
-
-  <div class="container">
-    <div id="carousel" class="relative h-80">
-      <div
-        v-for="(item, index) in carouselItems"
-        :key="index"
-        :class="{ hidden: index !== currentIndex, block: index === currentIndex }"
-      >
-        <img class="img-carousel" :src="item.imgSrc" :alt="item.imgAlt" />
-        <div id="text-carousel" class="absolute w-full bottom-0 p-7 text-white">
-          <h2 class="font-bold text-2xl">{{ item.title }}</h2>
-          <span>{{ item.description }}</span>
-        </div>
-
-        <button class="btn-carousel btn-l absolute" @click="prevSlide">
-          <link
-            rel="stylesheet"
-            href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200"
-          />
-          <span class="material-symbols-outlined"> navigate_before </span>
-        </button>
-        <button class="btn-carousel btn-r absolute" @click="nextSlide">
-          <link
-            rel="stylesheet"
-            href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200"
-          />
-          <span class="material-symbols-outlined"> navigate_next </span>
-        </button>
-      </div>
-    </div>
-
-    <div class="divisor"></div>
-
-    <div class="video">
-      <iframe
-        src="https://www.youtube.com/embed/vh0zLxOPKB4"
-        title="Selfit - Academia do seu jeito"
-        frameborder="0"
-        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-        allowfullscreen
-      ></iframe>
-    </div>
-  </div>
-
-  <footer>2024 Selfit © Todos os direitos reservados. Desenvolvido por Avantti Consultoria</footer>
-</template>
-
 <style scoped>
-.container {
-  display: flex;
-  width: 100%;
-  margin: 30px 0;
-  padding: 0 2%;
-  justify-content: center;
-}
-
-#carousel,
-.video {
-  width: calc(100% / 2);
-}
-
 #carousel img {
   border-radius: 15px;
   position: absolute;
@@ -155,10 +228,6 @@ onMounted(() => {
   border-radius: 15px;
   width: 100%;
   height: 100%;
-}
-
-.divisor {
-  width: 2%;
 }
 
 .btn-carousel {
@@ -208,18 +277,6 @@ onMounted(() => {
   margin-right: 10px;
 }
 
-.oferta-wraper {
-  display: flex;
-  justify-content: center;
-  width: 100%;
-  margin: 50px 0;
-}
-
-.oferta-wraper img {
-  width: 50%;
-  display: flex;
-}
-
 footer {
   width: 100%;
   display: flex;
@@ -228,5 +285,14 @@ footer {
   padding: 7px 0;
   background-color: red;
   color: #fff;
+}
+
+.showUnidade {
+  display: flex;
+  flex-direction: column;
+  color: white;
+  margin-top: 30px;
+  padding: 5%;
+  border: 2px solid red;
 }
 </style>
