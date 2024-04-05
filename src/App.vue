@@ -94,9 +94,9 @@
   <footer>2024 Selfit © Todos os direitos reservados. Desenvolvido por Avantti Consultoria</footer>
 </template>
 
-<script setup lang="js">
+<script setup lang="ts">
 import { ref, onMounted } from 'vue'; // Importa referências e o método onMounted do Vue
-import Papa from 'papaparse';
+import type Papa from 'papaparse';
 
 const showModal = ref(false);
 const selfit = ref([]);
