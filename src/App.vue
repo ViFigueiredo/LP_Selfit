@@ -2,13 +2,13 @@
   <header class="w-full relative">
     <img :src="banner" alt="banner" />
 
-    <button class="btn-zap">
+    <!-- <button class="btn-zap">
       <img src="./assets/img/whatsapp.png" alt="" />
       <a
         href="https://wa.me//5581981717978?text=Quero+conhecer+mais+sobre+as+academias+da+Selfit..."
         >Fale conosco</a
       >
-    </button>
+    </button> -->
   </header>
 
   <div class="oferta-wraper relative w-full space-x-10 bg-black">
