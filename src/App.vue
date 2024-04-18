@@ -87,7 +87,7 @@
 
     <div id="video" class="w-[full] rounded">
       <iframe
-        src="https://www.youtube.com/embed/vh0zLxOPKB4"
+        src="https://www.youtube.com/embed/vh0zLxOPKB4?si=fnMFarG0p3in_MJI"
         title="Selfit - Academia do seu jeito"
         frameborder="0"
         allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
