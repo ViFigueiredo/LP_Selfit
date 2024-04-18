@@ -1,11 +1,11 @@
 <template>
-  <header class="w-full h-full">
+  <header class="w-full h-full mb-5">
     <img :src="banner" class="w-full h-full" alt="banner" />
   </header>
 
-  <div class="oferta-wraper w-full flex flex-col bg-black">
+  <div class="oferta-wraper w-full flex flex-col md:flex-row bg-black">
     <img class="w-full h-60" src="./assets/img/oferta.png" alt="plano plus" />
-    <div class="flex w-full h-[100px] justify-center items-center">
+    <div class="flex w-full h-[100px] md:h-auto justify-center items-center">
       <button
         class="p-3 rounded-xl bg-red-600 hover:bg-gray-400 text-white hover:text-red-600 font-bold"
       >
