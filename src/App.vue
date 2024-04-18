@@ -99,7 +99,7 @@
   </div>
 
   <footer class="w-full flex justify-center items-center text-center p-5 bg-red-600 text-white">
-    2024 Selfit © Todos os direitos reservados. Desenvolvido por Avantti Consultoria
+    2024 Selfit © Todos os direitos reservados. Desenvolvido por Center Soluções
   </footer>
 </template>
 
