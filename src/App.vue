@@ -104,7 +104,7 @@
 </template>
 
 <script setup lang="js">
-import { ref, onMounted } from 'vue';
+import { ref, onMounted, onUnmounted } from 'vue';
 import Papa from 'papaparse';
 
 const showModal = ref(false);
@@ -182,7 +182,14 @@ const toggleModal = (event) => {
   }
 };
 
+const keydownHandler = (event) => {
+  if (event.key === 'Escape') {
+    showModal.value = false;
+  }
+};
+
 onMounted(async () => {
+  window.addEventListener('keydown', keydownHandler);
   setInterval(nextSlide, 5000);
   const response = await fetch('/selfit.csv');
   const csvData = await response.text();
@@ -211,6 +218,10 @@ onMounted(async () => {
       }));
     }
   });
+});
+
+onUnmounted(() => {
+  window.removeEventListener('keydown', keydownHandler);
 });
 </script>
 
