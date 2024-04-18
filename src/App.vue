@@ -6,8 +6,10 @@
   <div class="h-5 bg-gradient-to-t from-custom-blue to-custom-red"></div>
 
   <div class="oferta-wraper w-full flex flex-col md:flex-row bg-black">
-    <img class="w-full h-60" src="./assets/img/oferta.png" alt="plano plus" />
-    <div class="flex w-full h-[100px] md:h-auto justify-center items-center">
+    <img class="w-full h-60 lg:h-80" src="./assets/img/oferta.png" alt="plano plus" />
+    <div
+      class="flex w-full h-[100px] md:h-auto justify-center md:justify-start md:ml-12 items-center"
+    >
       <button
         class="p-3 rounded-xl bg-red-600 hover:bg-gray-400 text-white hover:text-red-600 font-bold"
       >
@@ -51,8 +53,10 @@
     </div>
   </div>
 
-  <div class="w-full flex flex-col justify-center my-5 px-5 space-y-5">
-    <div id="carousel" class="relative h-80 w-full">
+  <div
+    class="w-full flex flex-col justify-center items-center my-12 px-5 space-y-12"
+  >
+    <div id="carousel" class="relative h-80 w-[80%]">
       <div
         v-for="(item, index) in carouselItems"
         :key="index"
@@ -61,7 +65,7 @@
         <img id="img-carousel" :src="item.imgSrc" :alt="item.imgAlt" />
         <div id="text-carousel" class="absolute w-full bottom-0 p-7 text-white">
           <h2 class="font-bold text-2xl">{{ item.title }}</h2>
-          <span>{{ item.description }}</span>
+          <span class="text-xs md:text-sm">{{ item.description }}</span>
         </div>
 
         <button
@@ -87,7 +91,7 @@
       </div>
     </div>
 
-    <div id="video" class="w-[full] rounded">
+    <div id="video" class="w-[80%] rounded">
       <iframe
         src="https://www.youtube.com/embed/vh0zLxOPKB4?si=1SuMJeELkh3Ye-zi"
         title="YouTube video player"
@@ -100,7 +104,7 @@
     </div>
   </div>
 
-  <footer class="w-full flex justify-center items-center text-center p-2 bg-red-600 text-white">
+  <footer class="absolute w-full flex justify-center items-center text-center p-2 bg-red-600 text-white">
     2024 Selfit © Todos os direitos reservados. Desenvolvido por Center Soluções.
   </footer>
 </template>
