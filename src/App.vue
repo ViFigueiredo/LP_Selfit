@@ -1,7 +1,9 @@
 <template>
-  <header class="w-full h-full mb-5">
+  <header class="w-full h-full">
     <img :src="banner" class="w-full h-full" alt="banner" />
   </header>
+
+  <div class="h-5 bg-gradient-to-t from-custom-blue to-custom-red"></div>
 
   <div class="oferta-wraper w-full flex flex-col md:flex-row bg-black">
     <img class="w-full h-60" src="./assets/img/oferta.png" alt="plano plus" />
@@ -98,8 +100,8 @@
     </div>
   </div>
 
-  <footer class="w-full flex justify-center items-center text-center p-5 bg-red-600 text-white">
-    2024 Selfit © Todos os direitos reservados. Desenvolvido por Center Soluções
+  <footer class="w-full flex justify-center items-center text-center p-2 bg-red-600 text-white">
+    2024 Selfit © Todos os direitos reservados. Desenvolvido por Center Soluções.
   </footer>
 </template>
 
