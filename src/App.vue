@@ -22,7 +22,7 @@
   >
     <div
       id="modal"
-      class="bg-black overflow-y-auto p-6 w-[50%] h-[50%] rounded-xl flex flex-col space-y-5 z-10"
+      class="bg-black overflow-y-auto p-6 w-[90%] h-[95%] rounded-xl flex flex-col space-y-5 z-10"
       @click.stop
     >
       <ul v-for="(cidade, index) in cidadesComUnidades" :key="index">
