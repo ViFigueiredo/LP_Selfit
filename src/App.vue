@@ -87,10 +87,11 @@
 
     <div id="video" class="w-[full] rounded">
       <iframe
-        src="https://www.youtube.com/embed/vh0zLxOPKB4?si=fnMFarG0p3in_MJI"
-        title="Selfit - Academia do seu jeito"
+        src="https://www.youtube.com/embed/vh0zLxOPKB4?si=1SuMJeELkh3Ye-zi"
+        title="YouTube video player"
         frameborder="0"
         allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+        referrerpolicy="strict-origin-when-cross-origin"
         allowfullscreen
         class="w-full h-80 rounded-xl"
       ></iframe>
