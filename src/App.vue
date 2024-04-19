@@ -29,33 +29,42 @@
       class="bg-black overflow-y-auto p-6 w-[90%] h-[95%] rounded-xl flex flex-col space-y-5 z-10"
       @click.stop
     >
-      <ul v-for="(cidade, index) in cidadesComUnidades" :key="index">
-        <li
-          class="cursor-pointer text-white hover:text-red-600 font-bold"
-          @click="toggleUnidades(index)"
+      <div class="flex w-full justify-end">
+        <span class="text-white font-bold cursor-pointer" @click="collapseAll">Recolher Todos</span>
+      </div>
+      <div v-for="(cidades, uf) in agrupadosPorUF" :key="uf">
+        <h2
+          class="cursor-pointer text-white hover:text-red-600 font-bold hover:underline active:border uppercase"
+          @click="toggleCidades(uf)"
         >
-          {{ cidade.nome }}
-        </li>
-        <div
-          id="unidade"
-          class="flex flex-col text-white mt-[30px] p-[5%] border border-2 border-solid border-red-600 space-y-3"
-          v-if="cidade.showUnidades"
-        >
-          <span
-            v-for="unidade in unidades(cidade.nome)"
-            :key="unidade"
-            class="cursor-pointer font-bold hover:text-green-300 hover:underline"
-            @click="openUnidadeUrl(unidade)"
-            >{{ unidade }}
-          </span>
+          {{ ufs[uf] }}
+        </h2>
+        <div v-if="showCidades[uf]" class="border border-2 border-solid border-red-600 p-5">
+          <div v-for="(unidades, cidade) in cidades" :key="cidade">
+            <h3
+              class="cursor-pointer text-white hover:text-red-600 font-bold py-5"
+              @click="toggleUnidades(uf, cidade)"
+            >
+              {{ cidade }}
+            </h3>
+            <ul v-if="showUnidades[uf] && showUnidades[uf][cidade]">
+              <li
+                v-for="unidade in unidades"
+                :key="unidade.UNIDADE"
+                class="w-full flex justify-end text-white hover:bg-red-300 hover:text-black"
+              >
+                <a :href="unidade.URL" target="_blank" class="cursor-pointer font-bold p-3">
+                  {{ unidade.UNIDADE }}
+                </a>
+              </li>
+            </ul>
+          </div>
         </div>
-      </ul>
+      </div>
     </div>
   </div>
 
-  <div
-    class="w-full flex flex-col justify-center items-center my-12 px-5 space-y-12"
-  >
+  <div class="w-full flex flex-col justify-center items-center my-12 px-5 space-y-12">
     <div id="carousel" class="relative h-80 w-[80%]">
       <div
         v-for="(item, index) in carouselItems"
@@ -92,7 +101,7 @@
     </div>
 
     <div id="video" class="w-[80%] rounded">
-      <iframe
+      <!--<iframe
         src="https://www.youtube.com/embed/vh0zLxOPKB4?si=1SuMJeELkh3Ye-zi"
         title="YouTube video player"
         frameborder="0"
@@ -100,23 +109,23 @@
         referrerpolicy="strict-origin-when-cross-origin"
         allowfullscreen
         class="w-full h-80 rounded-xl"
-      ></iframe>
+      ></iframe>-->
     </div>
   </div>
 
-  <footer class="absolute w-full flex justify-center items-center text-center p-2 bg-red-600 text-white">
+  <footer
+    class="absolute w-full flex justify-center items-center text-center p-2 bg-red-600 text-white"
+  >
     2024 Selfit © Todos os direitos reservados. Desenvolvido por Center Soluções.
   </footer>
 </template>
 
 <script setup lang="js">
-import { ref, onMounted, onUnmounted } from 'vue';
+import { ref, onMounted, onUnmounted, computed } from 'vue';
 import Papa from 'papaparse';
 
 const showModal = ref(false);
 const selfit = ref([]);
-const cidades = ref([]);
-const cidadesComUnidades = ref([]);
 const banner = 'https://www.selfitacademias.com.br/images/banner_verao_desktop.jpg';
 const data = [
   {
@@ -157,6 +166,38 @@ const data = [
 ];
 const currentIndex = ref(0);
 const carouselItems = ref(data);
+const showCidades = ref({});
+const showUnidades = ref({});
+
+const ufs = {
+  AC: 'Acre',
+  AL: 'Alagoas',
+  AP: 'Amapá',
+  AM: 'Amazonas',
+  BA: 'Bahia',
+  CE: 'Ceará',
+  DF: 'Distrito Federal',
+  ES: 'Espírito Santo',
+  GO: 'Goiás',
+  MA: 'Maranhão',
+  MT: 'Mato Grosso',
+  MS: 'Mato Grosso do Sul',
+  MG: 'Minas Gerais',
+  PA: 'Pará',
+  PB: 'Paraíba',
+  PR: 'Paraná',
+  PE: 'Pernambuco',
+  PI: 'Piauí',
+  RJ: 'Rio de Janeiro',
+  RN: 'Rio Grande do Norte',
+  RS: 'Rio Grande do Sul',
+  RO: 'Rondônia',
+  RR: 'Roraima',
+  SC: 'Santa Catarina',
+  SP: 'São Paulo',
+  SE: 'Sergipe',
+  TO: 'Tocantins'
+};
 
 const nextSlide = () => {
   currentIndex.value = (currentIndex.value + 1) % carouselItems.value.length;
@@ -165,21 +206,6 @@ const nextSlide = () => {
 const prevSlide = () => {
   currentIndex.value =
     (currentIndex.value - 1 + carouselItems.value.length) % carouselItems.value.length;
-};
-
-const unidades = (cidade) => {
-  return selfit.value.filter((item) => item.CIDADE === cidade).map((item) => item.UNIDADE);
-};
-
-const toggleUnidades = (index) => {
-  cidadesComUnidades.value[index].showUnidades = !cidadesComUnidades.value[index].showUnidades;
-};
-
-const openUnidadeUrl = (unidade) => {
-  const unidadeObj = selfit.value.find((item) => item.UNIDADE === unidade);
-  if (unidadeObj && unidadeObj.URL) {
-    window.open(unidadeObj.URL, '_blank');
-  }
 };
 
 const toggleModal = (event) => {
@@ -193,6 +219,23 @@ const keydownHandler = (event) => {
     showModal.value = false;
   }
 };
+
+const agrupadosPorUF = computed(() => {
+  return selfit.value.reduce((grupos, objeto) => {
+    const chaveUF = objeto.UF;
+    if (!grupos[chaveUF]) {
+      grupos[chaveUF] = {};
+    }
+
+    const chaveCidade = objeto.CIDADE;
+    if (!grupos[chaveUF][chaveCidade]) {
+      grupos[chaveUF][chaveCidade] = [];
+    }
+
+    grupos[chaveUF][chaveCidade].push(objeto);
+    return grupos;
+  }, {});
+});
 
 onMounted(async () => {
   window.addEventListener('keydown', keydownHandler);
@@ -208,20 +251,12 @@ onMounted(async () => {
         .map((row) => {
           const values = Object.values(row)[0];
           if (values) {
-            const [UF, CIDADE, UNIDADE, ENDEREÇO, URL] = values.split(';');
-            return { UF, CIDADE, UNIDADE, ENDEREÇO, URL, showUnidades: false };
+            const [UF, CIDADE, UNIDADE, ENDERECO, URL] = values.split(';');
+            return { UF, CIDADE, UNIDADE, ENDERECO, URL, showUnidades: false };
           }
         })
         .filter(Boolean);
       selfit.value = JSON.parse(JSON.stringify(formattedData));
-      const tempCidades = selfit.value.map((obj) => obj.CIDADE);
-      const set = new Set(tempCidades);
-      const uniqueCidades = Array.from(set);
-      cidades.value = uniqueCidades.sort();
-      cidadesComUnidades.value = cidades.value.map((cidade) => ({
-        nome: cidade,
-        showUnidades: false
-      }));
     }
   });
 });
@@ -229,6 +264,22 @@ onMounted(async () => {
 onUnmounted(() => {
   window.removeEventListener('keydown', keydownHandler);
 });
+
+function toggleCidades(uf) {
+  showCidades.value[uf] = !showCidades.value[uf];
+}
+
+function toggleUnidades(uf, cidade) {
+  if (!showUnidades.value[uf]) {
+    showUnidades.value[uf] = {};
+  }
+  showUnidades.value[uf][cidade] = !showUnidades.value[uf][cidade];
+}
+
+function collapseAll() {
+  showCidades.value = {};
+  showUnidades.value = {};
+}
 </script>
 
 <style scoped>
