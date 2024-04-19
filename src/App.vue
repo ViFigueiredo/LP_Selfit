@@ -226,6 +226,7 @@ const toggleModal = (event) => {
     event.target.innerText === 'Fechar'
   ) {
     showModal.value = !showModal.value;
+    collapseAll();
   }
 };
 
