@@ -101,7 +101,7 @@
     </div>
 
     <div id="video" class="w-[80%] rounded">
-      <!--<iframe
+      <iframe
         src="https://www.youtube.com/embed/vh0zLxOPKB4?si=1SuMJeELkh3Ye-zi"
         title="YouTube video player"
         frameborder="0"
@@ -109,7 +109,7 @@
         referrerpolicy="strict-origin-when-cross-origin"
         allowfullscreen
         class="w-full h-80 rounded-xl"
-      ></iframe>-->
+      ></iframe>
     </div>
   </div>
 
