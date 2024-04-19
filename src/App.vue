@@ -236,7 +236,7 @@ const keydownHandler = (event) => {
 };
 
 const agrupadosPorUF = computed(() => {
-  return selfit.value.reduce((grupos, objeto) => {
+  let grupos = selfit.value.reduce((grupos, objeto) => {
     const chaveUF = objeto.UF;
     if (!grupos[chaveUF]) {
       grupos[chaveUF] = {};
@@ -250,6 +250,23 @@ const agrupadosPorUF = computed(() => {
     grupos[chaveUF][chaveCidade].push(objeto);
     return grupos;
   }, {});
+
+  // Ordena as UFs, cidades e unidades alfabeticamente
+  for (let uf in grupos) {
+    grupos[uf] = Object.keys(grupos[uf])
+      .sort()
+      .reduce((obj, key) => {
+        obj[key] = grupos[uf][key].sort((a, b) => a.UNIDADE.localeCompare(b.UNIDADE));
+        return obj;
+      }, {});
+  }
+
+  return Object.keys(grupos)
+    .sort()
+    .reduce((obj, key) => {
+      obj[key] = grupos[key];
+      return obj;
+    }, {});
 });
 
 onMounted(async () => {
