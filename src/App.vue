@@ -210,32 +210,6 @@ const ufs = {
   TO: 'Tocantins'
 };
 
-const nextSlide = () => {
-  currentIndex.value = (currentIndex.value + 1) % carouselItems.value.length;
-};
-
-const prevSlide = () => {
-  currentIndex.value =
-    (currentIndex.value - 1 + carouselItems.value.length) % carouselItems.value.length;
-};
-
-const toggleModal = (event) => {
-  if (
-    event.target.id === 'modal-shadow' ||
-    event.target.innerText === 'SELECIONAR UNIDADE' ||
-    event.target.innerText === 'Fechar'
-  ) {
-    showModal.value = !showModal.value;
-    collapseAll();
-  }
-};
-
-const keydownHandler = (event) => {
-  if (event.key === 'Escape') {
-    showModal.value = false;
-  }
-};
-
 const agrupadosPorUF = computed(() => {
   let grupos = selfit.value.reduce((grupos, objeto) => {
     const chaveUF = objeto.UF;
@@ -270,6 +244,48 @@ const agrupadosPorUF = computed(() => {
     }, {});
 });
 
+function nextSlide() {
+  currentIndex.value = (currentIndex.value + 1) % carouselItems.value.length;
+}
+
+function prevSlide() {
+  currentIndex.value =
+    (currentIndex.value - 1 + carouselItems.value.length) % carouselItems.value.length;
+}
+
+function toggleModal(event) {
+  if (
+    event.target.id === 'modal-shadow' ||
+    event.target.innerText === 'SELECIONAR UNIDADE' ||
+    event.target.innerText === 'Fechar'
+  ) {
+    showModal.value = !showModal.value;
+    collapseAll();
+  }
+}
+
+function keydownHandler(event) {
+  if (event.key === 'Escape') {
+    showModal.value = false;
+  }
+}
+
+function toggleCidades(uf) {
+  showCidades.value[uf] = !showCidades.value[uf];
+}
+
+function toggleUnidades(uf, cidade) {
+  if (!showUnidades.value[uf]) {
+    showUnidades.value[uf] = {};
+  }
+  showUnidades.value[uf][cidade] = !showUnidades.value[uf][cidade];
+}
+
+function collapseAll() {
+  showCidades.value = {};
+  showUnidades.value = {};
+}
+
 onMounted(async () => {
   window.addEventListener('keydown', keydownHandler);
   setInterval(nextSlide, 5000);
@@ -297,22 +313,6 @@ onMounted(async () => {
 onUnmounted(() => {
   window.removeEventListener('keydown', keydownHandler);
 });
-
-function toggleCidades(uf) {
-  showCidades.value[uf] = !showCidades.value[uf];
-}
-
-function toggleUnidades(uf, cidade) {
-  if (!showUnidades.value[uf]) {
-    showUnidades.value[uf] = {};
-  }
-  showUnidades.value[uf][cidade] = !showUnidades.value[uf][cidade];
-}
-
-function collapseAll() {
-  showCidades.value = {};
-  showUnidades.value = {};
-}
 </script>
 
 <style scoped>
