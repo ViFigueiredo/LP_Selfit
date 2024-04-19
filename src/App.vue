@@ -1,11 +1,11 @@
 <template>
-  <header class="w-full h-full">
+  <header class="relative w-full h-full">
     <img :src="banner" class="w-full h-full" alt="banner" />
   </header>
 
-  <div class="h-5 bg-gradient-to-t from-custom-blue to-custom-red"></div>
+  <div class="relative h-5 bg-gradient-to-t from-custom-blue to-custom-red"></div>
 
-  <div class="oferta-wraper w-full flex flex-col md:flex-row bg-black">
+  <div class="relative oferta-wraper w-full flex flex-col md:flex-row bg-black">
     <img class="w-full h-60 lg:h-80" src="./assets/img/oferta.png" alt="plano plus" />
     <div
       class="flex w-full h-[100px] md:h-auto justify-center md:justify-start md:ml-12 items-center"
@@ -20,17 +20,26 @@
 
   <div
     id="modal-shadow"
-    class="absolute z-10 top-0 w-[100%] h-[100%] bg-black/[0.6] flex items-center justify-center"
+    class="absolute z-10 top-0 w-full h-full bg-black/[0.6]"
     v-if="showModal"
     @click="toggleModal"
   >
     <div
       id="modal"
-      class="bg-black overflow-y-auto p-6 w-[90%] h-[95%] rounded-xl flex flex-col space-y-5 z-10"
+      class="bg-black overflow-y-auto p-6 w-full h-[100vh] rounded-xl flex flex-col space-y-5 z-10"
       @click.stop
     >
-      <div class="flex w-full justify-end">
-        <span class="text-white font-bold cursor-pointer" @click="collapseAll">Recolher Todos</span>
+      <div class="flex w-full justify-end space-x-5">
+        <span
+          class="text-white font-bold cursor-pointer hover:bg-white hover:text-black"
+          @click="collapseAll"
+          >Recolher Todos</span
+        >
+        <span
+          class="text-white font-bold cursor-pointer hover:bg-white hover:text-black"
+          @click="toggleModal"
+          >Fechar</span
+        >
       </div>
       <div v-for="(cidades, uf) in agrupadosPorUF" :key="uf">
         <h2
@@ -64,8 +73,10 @@
     </div>
   </div>
 
-  <div class="w-full flex flex-col justify-center items-center my-12 px-5 space-y-12">
-    <div id="carousel" class="relative h-80 w-[80%]">
+  <div
+    class="w-full flex flex-col md:flex-row justify-center items-center my-12 px-5 space-y-12 md:space-y-0 md:space-x-12"
+  >
+    <div id="carousel" class="relative h-80 w-[80%] md:h-50 md:w-[50%]">
       <div
         v-for="(item, index) in carouselItems"
         :key="index"
@@ -100,7 +111,7 @@
       </div>
     </div>
 
-    <div id="video" class="w-[80%] rounded">
+    <div id="video" class="w-[80%] rounded md:h-50 md:w-[50%]">
       <iframe
         src="https://www.youtube.com/embed/vh0zLxOPKB4?si=1SuMJeELkh3Ye-zi"
         title="YouTube video player"
@@ -209,7 +220,11 @@ const prevSlide = () => {
 };
 
 const toggleModal = (event) => {
-  if (event.target.id === 'modal-shadow' || event.target.innerText === 'SELECIONAR UNIDADE') {
+  if (
+    event.target.id === 'modal-shadow' ||
+    event.target.innerText === 'SELECIONAR UNIDADE' ||
+    event.target.innerText === 'Fechar'
+  ) {
     showModal.value = !showModal.value;
   }
 };

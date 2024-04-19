@@ -10,6 +10,26 @@
 
 html,
 body {
+  position: relative;
   height: 100vh;
   background-color: rgb(221, 221, 221);
+}
+
+/* Para Webkit (Safari e Chrome) */
+::-webkit-scrollbar {
+  width: 12px; /* Largura da barra de rolagem */
+}
+
+::-webkit-scrollbar-track {
+  background: white; /* Cor de fundo da barra */
+}
+
+::-webkit-scrollbar-thumb {
+  background: red; /* Cor do controle da barra de rolagem */
+}
+
+/* Para Firefox */
+* {
+  scrollbar-width: thin; /* Largura da barra de rolagem */
+  scrollbar-color: red white; /* Cor do controle da barra e cor de fundo da barra */
 }
