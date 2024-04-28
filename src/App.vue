@@ -1,6 +1,6 @@
 <template>
   <header class="relative w-full h-full">
-    <img :src="banner" class="w-full h-full" alt="banner" />
+    <img src="./assets/img/banner_maes.jpg" class="w-full h-full" alt="banner" />
   </header>
 
   <div class="relative h-5 bg-gradient-to-t from-custom-blue to-custom-red"></div>
@@ -137,7 +137,6 @@ import Papa from 'papaparse';
 
 const showModal = ref(false);
 const selfit = ref([]);
-const banner = 'https://www.selfitacademias.com.br/images/banner_verao_desktop.jpg';
 const data = [
   {
     imgSrc: 'https://www.selfitacademias.com.br/images/aselfit-intense.jpg',
