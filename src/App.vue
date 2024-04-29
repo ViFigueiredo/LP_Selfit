@@ -1,6 +1,6 @@
 <template>
   <header class="relative w-full h-full">
-    <img src="./assets/img/banner_maes.jpg" class="w-full h-full" alt="banner" />
+    <img src="./assets/img/banner_maes.png" class="w-full h-full" alt="banner" />
   </header>
 
   <div class="relative h-5 bg-gradient-to-t from-custom-blue to-custom-red"></div>
