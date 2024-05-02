@@ -8,12 +8,19 @@
   <div class="relative oferta-wraper w-full flex flex-col md:flex-row bg-black">
     <img class="w-full h-60 lg:h-80" src="./assets/img/oferta.png" alt="plano plus" />
     <div
-      class="flex w-full h-[100px] md:h-auto justify-center md:justify-start md:ml-12 items-center"
+      class="flex w-full h-[100px] md:h-auto justify-center md:justify-start md:ml-12 items-center space-x-5"
     >
       <button
         class="p-3 rounded-xl bg-red-600 hover:bg-gray-400 text-white hover:text-red-600 font-bold"
       >
         <span @click="toggleModal">SELECIONAR UNIDADE</span>
+      </button>
+
+      <button class="bg-green-500 p-3 rounded-xl font-bold text-white">
+        <a href="https://wa.me/558130481279" target="_blank"class="flex space-x-2">
+          <img src="/src/assets/img/whatsapp.png" alt="" class="h-6" />
+          <span>Fale com a gente 🤩</span>
+        </a>
       </button>
     </div>
   </div>
