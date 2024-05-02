@@ -17,7 +17,7 @@
       </button>
 
       <button class="bg-green-500 p-3 rounded-xl font-bold text-white">
-        <a href="https://wa.me/558130481279" target="_blank"class="flex space-x-2">
+        <a href="https://wa.me/558130481279?text=Olá! Quero saber mais..." target="_blank"class="flex space-x-2">
           <img src="/src/assets/img/whatsapp.png" alt="" class="h-6" />
           <span>Fale com a gente 🤩</span>
         </a>
