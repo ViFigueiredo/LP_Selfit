@@ -3,23 +3,29 @@
     <img src="./assets/img/banner_maes.png" class="w-full h-full" alt="banner" />
   </header>
 
-  <div class="relative h-5 bg-gradient-to-t from-custom-blue to-custom-red"></div>
+  <div class="relative h-6 bg-gradient-to-t from-custom-blue to-custom-red"></div>
 
-  <div class="relative oferta-wraper w-full flex flex-col md:flex-row bg-black">
+  <div
+    class="relative oferta-wraper w-full h-auto flex flex-col justify-center items-center md:flex-row bg-black"
+  >
     <img class="w-full h-60 lg:h-80" src="./assets/img/oferta.png" alt="plano plus" />
     <div
-      class="flex w-full h-[100px] md:h-auto justify-center md:justify-start md:ml-12 items-center space-x-5"
+      class="flex flex-col lg:flex-row w-full m-12 justify-center items-center space-y-5 lg:space-x-6 lg:space-y-0 lg:ml-8"
     >
       <button
-        class="p-3 rounded-xl bg-red-600 hover:bg-gray-400 text-white hover:text-red-600 font-bold"
+        class="p-3 lg:p-5 xl:text-xl rounded-xl bg-red-600 hover:bg-gray-400 text-white hover:text-red-600 font-bold"
       >
-        <span @click="toggleModal">SELECIONAR UNIDADE</span>
+        <span @click="toggleModal">Selecionar Unidade</span>
       </button>
 
-      <button class="bg-green-500 p-3 rounded-xl font-bold text-white">
-        <a href="https://wa.me/558130481279?text=Olá! Quero saber mais..." target="_blank"class="flex space-x-2">
-          <img src="/src/assets/img/whatsapp.png" alt="" class="h-6" />
-          <span>Fale com a gente 🤩</span>
+      <button class="p-3 lg:p-5 xl:text-xl bg-green-500 rounded-xl font-bold text-white space-x-2">
+        <a
+          href="https://wa.me/558130481279?text=Olá! Quero saber mais..."
+          target="_blank"
+          class="flex space-x-2 items-center"
+        >
+          <img src="/src/assets/img/whatsapp.png" class="h-6" />
+          <span class="">Fale com a gente</span>
         </a>
       </button>
     </div>
@@ -27,13 +33,13 @@
 
   <div
     id="modal-shadow"
-    class="absolute z-10 top-0 w-full h-full bg-black/[0.6]"
+    class="fixed z-10 top-0 left-0 right-0 bottom-0 w-full h-full bg-black/[0.6]"
     v-if="showModal"
     @click="toggleModal"
   >
     <div
       id="modal"
-      class="bg-black overflow-y-auto p-6 w-full h-[100vh] rounded-xl flex flex-col space-y-5 z-10"
+      class="bg-black overflow-y-auto p-6 w-full h-full rounded-xl flex flex-col space-y-5 z-10"
       @click.stop
     >
       <div class="flex w-full justify-end space-x-5">
@@ -262,7 +268,7 @@ function prevSlide() {
 function toggleModal(event) {
   if (
     event.target.id === 'modal-shadow' ||
-    event.target.innerText === 'SELECIONAR UNIDADE' ||
+    event.target.innerText === 'Selecionar Unidade' ||
     event.target.innerText === 'Fechar'
   ) {
     showModal.value = !showModal.value;
