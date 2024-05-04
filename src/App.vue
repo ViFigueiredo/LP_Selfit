@@ -18,7 +18,7 @@
         <span @click="toggleModal">Selecionar Unidade</span>
       </button>
 
-      <button class="p-3 lg:p-5 xl:text-xl bg-green-500 rounded-xl font-bold text-white space-x-2">
+      <!-- <button class="p-3 lg:p-5 xl:text-xl bg-green-500 rounded-xl font-bold text-white space-x-2">
         <a
           href="https://wa.me/558130481279?text=Olá! Quero saber mais..."
           target="_blank"
@@ -27,7 +27,7 @@
           <img src="/src/assets/img/whatsapp.png" class="h-6" />
           <span class="">Fale com a gente</span>
         </a>
-      </button>
+      </button> -->
     </div>
   </div>
 
