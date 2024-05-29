@@ -15,23 +15,14 @@
       <button
         class="p-3 lg:p-5 xl:text-xl rounded-xl bg-red-600 hover:bg-gray-400 text-white hover:text-red-600 font-bold"
       >
-        <span @click="toggleModal">Selecionar Unidade</span>
+        <!-- <span @click="toggleModal">Selecionar Unidade</span> -->
+        <!-- TODO adicionar link whatsapp -->
+        <span>Quero conhecer mais...</span> 
       </button>
-
-      <!-- <button class="p-3 lg:p-5 xl:text-xl bg-green-500 rounded-xl font-bold text-white space-x-2">
-        <a
-          href="https://wa.me/558130481279?text=Olá! Quero saber mais..."
-          target="_blank"
-          class="flex space-x-2 items-center"
-        >
-          <img src="/src/assets/img/whatsapp.png" class="h-6" />
-          <span class="">Fale com a gente</span>
-        </a>
-      </button> -->
     </div>
   </div>
 
-  <div
+  <!-- <div
     id="modal-shadow"
     class="fixed z-10 top-0 left-0 right-0 bottom-0 w-full h-full bg-black/[0.6]"
     v-if="showModal"
@@ -84,7 +75,7 @@
         </div>
       </div>
     </div>
-  </div>
+  </div> -->
 
   <div
     class="w-full flex flex-col md:flex-row justify-center items-center my-12 px-5 space-y-12 md:space-y-0 md:space-x-12"
@@ -136,6 +127,24 @@
       ></iframe>
     </div>
   </div>
+
+  <!-- TODO adicionar link whatsapp -->
+  <button
+    class="z-10 p-2 bg-green-400 hover:bg-green-600 rounded-full fixed right-6 bottom-6 hover:shadow-inner shadow-[3px_3px_0px_0px_rgba(131,144,136,0.8)]"
+  >
+    <a
+      href="https://wa.me/558130481279?text=Olá! Tenho interesse..."
+      target="_blank"
+      class="flex space-x-2 items-center"
+    >
+      <img
+        src="https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg"
+        alt="WhatsApp"
+        width="48"
+        height="48"
+      />
+    </a>
+  </button>
 
   <footer
     class="absolute w-full flex justify-center items-center text-center p-2 bg-red-600 text-white"
