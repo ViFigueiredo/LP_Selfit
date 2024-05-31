@@ -1,7 +1,7 @@
 <template>
-  <header class="relative w-full h-full">
+  <!-- <header class="relative w-full h-full">
     <img src="./assets/img/banner_maes.png" class="w-full h-full" alt="banner" />
-  </header>
+  </header> -->
 
   <div class="relative h-6 bg-gradient-to-t from-custom-blue to-custom-red"></div>
 
