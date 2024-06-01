@@ -13,11 +13,17 @@
       class="flex flex-col lg:flex-row w-full m-12 justify-center items-center space-y-5 lg:space-x-6 lg:space-y-0 lg:ml-8"
     >
       <button
-        class="p-3 lg:p-5 xl:text-xl rounded-xl bg-red-600 hover:bg-gray-400 text-white hover:text-red-600 font-bold"
+        class="p-3 lg:p-5 xl:text-xl rounded-xl bg-red-600 hover:bg-gray-400 text-white hover:text-red-600 font-bold hover:cursor-pointer"
       >
         <!-- <span @click="toggleModal">Selecionar Unidade</span> -->
         <!-- TODO adicionar link whatsapp -->
-        <span>Quero conhecer mais...</span> 
+        <a
+          href="https://wa.me/558130481279?text=Olá! Tenho interesse..."
+          target="_blank"
+          class="flex space-x-2 items-center"
+        >
+          <span>Quero conhecer mais...</span>
+        </a>
       </button>
     </div>
   </div>
