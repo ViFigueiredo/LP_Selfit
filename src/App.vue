@@ -5,7 +5,7 @@
 
   <div class="relative h-6 bg-gradient-to-t from-custom-blue to-custom-red"></div>
 
-  <!-- <div
+  <div
     class="relative oferta-wraper w-full h-auto flex flex-col justify-center items-center md:flex-row bg-black"
   >
     <img class="w-full h-60 lg:h-80" src="./assets/img/oferta.png" alt="plano plus" />
@@ -15,18 +15,17 @@
       <button
         class="p-3 lg:p-5 xl:text-xl rounded-xl bg-red-600 hover:bg-gray-400 text-white hover:text-red-600 font-bold hover:cursor-pointer"
       >
-        <!-- <span @click="toggleModal">Selecionar Unidade</span> -->
-        <!-- TODO adicionar link whatsapp -->
-        <a
+        <span @click="toggleModal">Selecionar Unidade</span>
+        <!-- <a
           href="https://wa.me/558130481279?text=Olá! Tenho interesse..."
           target="_blank"
           class="flex space-x-2 items-center"
         >
           <span>Quero conhecer mais...</span>
-        </a>
+        </a> -->
       </button>
     </div>
-  </div> -->
+  </div>
 
   <div
     id="modal-shadow"
