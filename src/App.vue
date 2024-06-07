@@ -5,7 +5,7 @@
 
   <div class="relative h-6 bg-gradient-to-t from-custom-blue to-custom-red"></div>
 
-  <div
+  <!-- <div
     class="relative oferta-wraper w-full h-auto flex flex-col justify-center items-center md:flex-row bg-black"
   >
     <img class="w-full h-60 lg:h-80" src="./assets/img/oferta.png" alt="plano plus" />
@@ -26,9 +26,9 @@
         </a>
       </button>
     </div>
-  </div>
+  </div> -->
 
-  <!-- <div
+  <div
     id="modal-shadow"
     class="fixed z-10 top-0 left-0 right-0 bottom-0 w-full h-full bg-black/[0.6]"
     v-if="showModal"
@@ -81,7 +81,7 @@
         </div>
       </div>
     </div>
-  </div> -->
+  </div>
 
   <div
     class="w-full flex flex-col md:flex-row justify-center items-center my-12 px-5 space-y-12 md:space-y-0 md:space-x-12"
