@@ -7,6 +7,9 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Selfit Academias</title>
 
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
+
+
   <!-- Meta Pixel Code -->
   <script>
     !function (f, b, e, v, n, t, s) {
@@ -22,11 +25,11 @@
       'https://connect.facebook.net/en_US/fbevents.js');
     fbq('init', '3783837618554436');
     fbq('track', 'PageView');
-  </script>
+  // </script>
   <!-- End Meta Pixel Code -->
 
-  <!-- Google Tag Manager -->
-  <script>
+  <!-- Google Tag Manager (zap) -->
+  <!-- <script>
     (function (w, d, s, l, i) {
       w[l] = w[l] || []; w[l].push({
         'gtm.start':
@@ -34,11 +37,11 @@
       }); var f = d.getElementsByTagName(s)[0],
         j = d.createElement(s), dl = l != 'dataLayer' ? '&l=' + l : ''; j.async = true; j.src =
           'https://www.googletagmanager.com/gtm.js?id=' + i + dl; f.parentNode.insertBefore(j, f);
-    })(window, document, 'script', 'dataLayer', 'GTM-PSFK8LTF');
-  </script>
-  <!-- End Google Tag Manager -->
+    })(window, document, 'script', 'dataLayer', 'GTM-PSFK8LTF'); 
+  </script> -->
+  <!-- End Google Tag Manager (zap) -->
 
-  
+
   <!-- Event snippet for Compra conversion page -->
   <script>
     gtag('event', 'conversion', {
@@ -56,6 +59,12 @@
 </head>
 
 <body>
+  <a href="http://api.whatsapp.com/send?1=pt_BR&phone=558130481279"
+    style="position:fixed;width:60px;height:60px;bottom:20px;right:20px;background-color:#25d366;color:#FFF;border-radius:50%;text-align:center;font-size:30px;box-shadow: 1px 1px 2px #888;z-index:9999;"
+    target="_blank">
+    <i style="margin-top:16px" class="fa fa-whatsapp"></i>
+  </a>
+
   <div id="app"></div>
   <script type="module" src="/src/main.ts"></script>
 
