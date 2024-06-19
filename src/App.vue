@@ -13,10 +13,23 @@
       class="flex flex-col lg:flex-row w-full m-12 justify-center items-center space-y-5 lg:space-x-6 lg:space-y-0 lg:ml-8"
     >
       <button
+<<<<<<< HEAD
         @click="toggleModal"
         class="p-3 lg:p-5 xl:text-xl rounded-xl bg-red-600 hover:bg-gray-400 text-white hover:text-red-600 font-bold hover:cursor-pointer"
       >
         <span>Selecionar Unidade</span>
+=======
+        class="p-3 lg:p-5 xl:text-xl rounded-xl bg-red-600 hover:bg-gray-400 text-white hover:text-red-600 font-bold hover:cursor-pointer"
+      >
+        <span @click="toggleModal">Selecionar Unidade</span>
+        <!-- <a
+          href="https://wa.me/558130481279?text=Olá! Tenho interesse..."
+          target="_blank"
+          class="flex space-x-2 items-center"
+        >
+          <span>Quero conhecer mais...</span>
+        </a> -->
+>>>>>>> parent of 85325fa ("Refactored HTML structure and formatting in index.html and App.vue files, removing unnecessary whitespace and reorganizing elements.")
       </button>
     </div>
   </div>
@@ -95,7 +108,10 @@
           class="flex justify-center items-center w-7 h-7 bg-white bg-opacity-70 rounded-full hover:bg-gray-300 top-[10px] left-[10px] absolute"
           @click="prevSlide"
         >
+<<<<<<< HEAD
         
+=======
+>>>>>>> parent of 85325fa ("Refactored HTML structure and formatting in index.html and App.vue files, removing unnecessary whitespace and reorganizing elements.")
           <link
             rel="stylesheet"
             href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200"
@@ -129,12 +145,29 @@
   </div>
 
   <!-- TODO adicionar link whatsapp -->
+<<<<<<< HEAD
   <!-- <button
     class="z-10 p-2 bg-green-400 hover:bg-green-600 rounded-full fixed right-6 bottom-6 hover:shadow-inner shadow-[3px_3px_0px_0px_rgba(131,144,136,0.8)]">
     <a href="https://wa.me/558130481279?text=Olá! Tenho interesse..." target="_blank"
       class="flex space-x-2 items-center">
       <img src="https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg" alt="WhatsApp" width="48"
         height="48" />
+=======
+  <button
+    class="z-10 p-2 bg-green-400 hover:bg-green-600 rounded-full fixed right-6 bottom-6 hover:shadow-inner shadow-[3px_3px_0px_0px_rgba(131,144,136,0.8)]"
+  >
+    <a
+      href="https://wa.me/558130481279?text=Olá! Tenho interesse..."
+      target="_blank"
+      class="flex space-x-2 items-center"
+    >
+      <img
+        src="https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg"
+        alt="WhatsApp"
+        width="48"
+        height="48"
+      />
+>>>>>>> parent of 85325fa ("Refactored HTML structure and formatting in index.html and App.vue files, removing unnecessary whitespace and reorganizing elements.")
     </a>
   </button> -->
 
