@@ -5,17 +5,13 @@
 
   <div class="relative h-6 bg-gradient-to-t from-custom-blue to-custom-red"></div>
 
-  <div
-    class="relative oferta-wraper w-full h-auto flex flex-col justify-center items-center md:flex-row bg-black"
-  >
+  <div class="relative oferta-wraper w-full h-auto flex flex-col justify-center items-center md:flex-row bg-black">
     <img class="w-full h-60 lg:h-80" src="./assets/img/oferta.png" alt="plano plus" />
     <div
-      class="flex flex-col lg:flex-row w-full m-12 justify-center items-center space-y-5 lg:space-x-6 lg:space-y-0 lg:ml-8"
-    >
-      <button
-        class="p-3 lg:p-5 xl:text-xl rounded-xl bg-red-600 hover:bg-gray-400 text-white hover:text-red-600 font-bold hover:cursor-pointer"
-      >
-        <span @click="toggleModal">Selecionar Unidade</span>
+      class="flex flex-col lg:flex-row w-full m-12 justify-center items-center space-y-5 lg:space-x-6 lg:space-y-0 lg:ml-8">
+      <button @click="toggleModal"
+        class="p-3 lg:p-5 xl:text-xl rounded-xl bg-red-600 hover:bg-gray-400 text-white hover:text-red-600 font-bold hover:cursor-pointer">
+        <span>Selecionar Unidade</span>
         <!-- <a
           href="https://wa.me/558130481279?text=Olá! Tenho interesse..."
           target="_blank"
@@ -27,50 +23,29 @@
     </div>
   </div>
 
-  <div
-    id="modal-shadow"
-    class="fixed z-10 top-0 left-0 right-0 bottom-0 w-full h-full bg-black/[0.6]"
-    v-if="showModal"
-    @click="toggleModal"
-  >
-    <div
-      id="modal"
-      class="bg-black overflow-y-auto p-6 w-full h-full rounded-xl flex flex-col space-y-5 z-10"
-      @click.stop
-    >
+  <div id="modal-shadow" class="fixed z-10 top-0 left-0 right-0 bottom-0 w-full h-full bg-black/[0.6]" v-if="showModal"
+    @click="toggleModal">
+    <div id="modal" class="bg-black overflow-y-auto p-6 w-full h-full rounded-xl flex flex-col space-y-5 z-10"
+      @click.stop>
       <div class="flex w-full justify-end space-x-5">
-        <span
-          class="text-white font-bold cursor-pointer hover:bg-white hover:text-black"
-          @click="collapseAll"
-          >Recolher Todos</span
-        >
-        <span
-          class="text-white font-bold cursor-pointer hover:bg-white hover:text-black"
-          @click="toggleModal"
-          >Fechar</span
-        >
+        <span class="text-white font-bold cursor-pointer hover:bg-white hover:text-black" @click="collapseAll">Recolher
+          Todos</span>
+        <span class="text-white font-bold cursor-pointer hover:bg-white hover:text-black"
+          @click="toggleModal">Fechar</span>
       </div>
       <div v-for="(cidades, uf) in agrupadosPorUF" :key="uf">
-        <h2
-          class="cursor-pointer text-white hover:text-red-600 font-bold hover:underline active:border uppercase"
-          @click="toggleCidades(uf)"
-        >
+        <h2 class="cursor-pointer text-white hover:text-red-600 font-bold hover:underline active:border uppercase"
+          @click="toggleCidades(uf)">
           {{ ufs[uf] }}
         </h2>
         <div v-if="showCidades[uf]" class="border border-2 border-solid border-red-600 p-5">
           <div v-for="(unidades, cidade) in cidades" :key="cidade">
-            <h3
-              class="cursor-pointer text-white hover:text-red-600 font-bold py-5"
-              @click="toggleUnidades(uf, cidade)"
-            >
+            <h3 class="cursor-pointer text-white hover:text-red-600 font-bold py-5" @click="toggleUnidades(uf, cidade)">
               {{ cidade }}
             </h3>
             <ul v-if="showUnidades[uf] && showUnidades[uf][cidade]">
-              <li
-                v-for="unidade in unidades"
-                :key="unidade.UNIDADE"
-                class="w-full flex justify-end text-white hover:bg-red-300 hover:text-black"
-              >
+              <li v-for="unidade in unidades" :key="unidade.UNIDADE"
+                class="w-full flex justify-end text-white hover:bg-red-300 hover:text-black">
                 <a :href="unidade.URL" target="_blank" class="cursor-pointer font-bold p-3">
                   {{ unidade.UNIDADE }}
                 </a>
@@ -83,14 +58,10 @@
   </div>
 
   <div
-    class="w-full flex flex-col md:flex-row justify-center items-center my-12 px-5 space-y-12 md:space-y-0 md:space-x-12"
-  >
+    class="w-full flex flex-col md:flex-row justify-center items-center my-12 px-5 space-y-12 md:space-y-0 md:space-x-12">
     <div id="carousel" class="relative h-80 w-[80%] md:h-50 md:w-[50%]">
-      <div
-        v-for="(item, index) in carouselItems"
-        :key="index"
-        :class="{ hidden: index !== currentIndex, block: index === currentIndex }"
-      >
+      <div v-for="(item, index) in carouselItems" :key="index"
+        :class="{ hidden: index !== currentIndex, block: index === currentIndex }">
         <img id="img-carousel" :src="item.imgSrc" :alt="item.imgAlt" />
         <div id="text-carousel" class="absolute w-full bottom-0 p-7 text-white">
           <h2 class="font-bold text-2xl">{{ item.title }}</h2>
@@ -99,61 +70,40 @@
 
         <button
           class="flex justify-center items-center w-7 h-7 bg-white bg-opacity-70 rounded-full hover:bg-gray-300 top-[10px] left-[10px] absolute"
-          @click="prevSlide"
-        >
-          <link
-            rel="stylesheet"
-            href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200"
-          />
+          @click="prevSlide">
+          <link rel="stylesheet"
+            href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
           <span class="material-symbols-outlined"> navigate_before </span>
         </button>
         <button
           class="flex justify-center items-center w-7 h-7 bg-white bg-opacity-70 rounded-full hover:bg-gray-300 top-[10px] right-[10px] absolute"
-          @click="nextSlide"
-        >
-          <link
-            rel="stylesheet"
-            href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200"
-          />
+          @click="nextSlide">
+          <link rel="stylesheet"
+            href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
           <span class="material-symbols-outlined"> navigate_next </span>
         </button>
       </div>
     </div>
 
     <div id="video" class="w-[80%] rounded md:h-50 md:w-[50%]">
-      <iframe
-        src="https://www.youtube.com/embed/vh0zLxOPKB4?si=1SuMJeELkh3Ye-zi"
-        title="YouTube video player"
+      <iframe src="https://www.youtube.com/embed/vh0zLxOPKB4?si=1SuMJeELkh3Ye-zi" title="YouTube video player"
         frameborder="0"
         allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-        referrerpolicy="strict-origin-when-cross-origin"
-        allowfullscreen
-        class="w-full h-80 rounded-xl"
-      ></iframe>
+        referrerpolicy="strict-origin-when-cross-origin" allowfullscreen class="w-full h-80 rounded-xl"></iframe>
     </div>
   </div>
 
   <!-- TODO adicionar link whatsapp -->
   <button
-    class="z-10 p-2 bg-green-400 hover:bg-green-600 rounded-full fixed right-6 bottom-6 hover:shadow-inner shadow-[3px_3px_0px_0px_rgba(131,144,136,0.8)]"
-  >
-    <a
-      href="https://wa.me/558130481279?text=Olá! Tenho interesse..."
-      target="_blank"
-      class="flex space-x-2 items-center"
-    >
-      <img
-        src="https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg"
-        alt="WhatsApp"
-        width="48"
-        height="48"
-      />
+    class="z-10 p-2 bg-green-400 hover:bg-green-600 rounded-full fixed right-6 bottom-6 hover:shadow-inner shadow-[3px_3px_0px_0px_rgba(131,144,136,0.8)]">
+    <a href="https://wa.me/558130481279?text=Olá! Tenho interesse..." target="_blank"
+      class="flex space-x-2 items-center">
+      <img src="https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg" alt="WhatsApp" width="48"
+        height="48" />
     </a>
   </button>
 
-  <footer
-    class="absolute w-full flex justify-center items-center text-center p-2 bg-red-600 text-white"
-  >
+  <footer class="absolute w-full flex justify-center items-center text-center p-2 bg-red-600 text-white">
     2024 Selfit © Todos os direitos reservados. Desenvolvido por Center Soluções.
   </footer>
 </template>
