@@ -52,11 +52,11 @@
             <ul v-if="showUnidades[uf] && showUnidades[uf][cidade]">
               <li
                 v-for="unidade in unidades"
-                :key="unidade.UNIDADE"
+                :key="unidade.CIDADE"
                 class="w-full flex justify-end text-white hover:bg-red-300 hover:text-black"
               >
                 <a :href="unidade.URL" target="_blank" class="cursor-pointer font-bold p-3">
-                  {{ unidade.UNIDADE }}
+                  {{ unidade.BAIRRO }}
                 </a>
               </li>
             </ul>
@@ -124,7 +124,8 @@
 
 <script setup lang="js">
 import { ref, onMounted, onUnmounted, computed } from 'vue';
-import unidades from '../../selfit.json';
+import db from '../firebase/init.js';
+import { collection, getDocs } from 'firebase/firestore';
 
 const showModal = ref(false);
 const selfit = ref([]);
@@ -221,7 +222,7 @@ const agrupadosPorUF = computed(() => {
     grupos[uf] = Object.keys(grupos[uf])
       .sort()
       .reduce((obj, key) => {
-        obj[key] = grupos[uf][key].sort((a, b) => a.UNIDADE.localeCompare(b.UNIDADE));
+        obj[key] = grupos[uf][key].sort((a, b) => a.CIDADE.localeCompare(b.CIDADE));
         return obj;
       }, {});
   }
@@ -275,10 +276,19 @@ function collapseAll() {
   showUnidades.value = {};
 }
 
+async function getSelfit() {
+  const unidadesRef = collection(db, 'unidades');
+  const result = await getDocs(unidadesRef);
+  result.forEach((doc) => {
+    selfit.value.push(doc.data());
+  });
+  // console.log(selfit.value);
+}
+
 onMounted(async () => {
   window.addEventListener('keydown', keydownHandler);
   setInterval(nextSlide, 5000);
-  selfit.value = unidades;
+  getSelfit();
 });
 
 onUnmounted(() => {
