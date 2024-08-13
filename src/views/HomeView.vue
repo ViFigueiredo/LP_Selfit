@@ -124,7 +124,7 @@
 
 <script setup lang="js">
 import { ref, onMounted, onUnmounted, computed } from 'vue';
-import Papa from 'papaparse';
+import unidades from '../../selfit.json';
 
 const showModal = ref(false);
 const selfit = ref([]);
@@ -278,25 +278,7 @@ function collapseAll() {
 onMounted(async () => {
   window.addEventListener('keydown', keydownHandler);
   setInterval(nextSlide, 5000);
-  const response = await fetch('/selfit.csv');
-  const csvData = await response.text();
-  Papa.parse(csvData, {
-    delimiter: ';',
-    header: true,
-    dynamicTyping: true,
-    complete: (results) => {
-      const formattedData = results.data
-        .map((row) => {
-          const values = Object.values(row)[0];
-          if (values) {
-            const [UF, CIDADE, UNIDADE, ENDERECO, URL] = values.split(';');
-            return { UF, CIDADE, UNIDADE, ENDERECO, URL, showUnidades: false };
-          }
-        })
-        .filter(Boolean);
-      selfit.value = JSON.parse(JSON.stringify(formattedData));
-    }
-  });
+  selfit.value = unidades;
 });
 
 onUnmounted(() => {
