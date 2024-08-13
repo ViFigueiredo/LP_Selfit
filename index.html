@@ -9,19 +9,20 @@
 
   <link href="./src/assets/css/output.css" rel="stylesheet">
 
-  <!-- Google Tag Manager -->
-  <script>(function (w, d, s, l, i) {
-      w[l] = w[l] || []; w[l].push({
-        'gtm.start':
-          new Date().getTime(), event: 'gtm.js'
-      }); var f = d.getElementsByTagName(s)[0],
-        j = d.createElement(s), dl = l != 'dataLayer' ? '&l=' + l : ''; j.async = true; j.src =
-          'https://www.googletagmanager.com/gtm.js?id=' + i + dl; f.parentNode.insertBefore(j, f);
-    })(window, document, 'script', 'dataLayer', 'GTM-PSFK8LTF');</script>
-  <!-- End Google Tag Manager -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=AW-16598474973">
 
-  <!-- Meta Pixel Code -->
-  <script>
+    // Google Ads tag (gtag.js)
+    window.dataLayer = window.dataLayer || []; function gtag() { dataLayer.push(arguments); } gtag('js', new Date()); gtag('config', 'AW-16598474973');
+
+    // Event snippet for Compra conversion page
+    gtag('event', 'conversion', {
+      'send_to': 'AW-16598474973/bb8QCLma7LcZEN3B4uo9',
+      'value': 1.0,
+      'currency': 'BRL',
+      'transaction_id': ''
+    });
+
+    // Meta Pixel Code
     !function (f, b, e, v, n, t, s) {
       if (f.fbq) return; n = f.fbq = function () {
         n.callMethod ?
@@ -35,43 +36,34 @@
       'https://connect.facebook.net/en_US/fbevents.js');
     fbq('init', '3783837618554436');
     fbq('track', 'PageView');
-  </script>
-  <!-- End Meta Pixel Code -->
 
-  <!-- Event snippet for Compra conversion page -->
-  <script>
-    gtag('event', 'conversion', {
-      'send_to': 'AW-16598474973/bb8QCLma7LcZEN3B4uo9',
-      'value': 1.0,
-      'currency': 'BRL',
-      'transaction_id': ''
-    });
+    // Google Tag Manager
+    (function (w, d, s, l, i) {
+      w[l] = w[l] || []; w[l].push({
+        'gtm.start':
+          new Date().getTime(), event: 'gtm.js'
+      }); var f = d.getElementsByTagName(s)[0],
+        j = d.createElement(s), dl = l != 'dataLayer' ? '&l=' + l : ''; j.async = true; j.src =
+          'https://www.googletagmanager.com/gtm.js?id=' + i + dl; f.parentNode.insertBefore(j, f);
+    })(window, document, 'script', 'dataLayer', 'GTM-PSFK8LTF');
   </script>
-  <!-- End Event snippet for Compra conversion page -->
-
-  <!-- Google Ads tag (gtag.js) -->
-  <script async src="https://www.googletagmanager.com/gtag/js?id=AW-16598474973"></script>
-  <script>
-    window.dataLayer = window.dataLayer || []; function gtag() { dataLayer.push(arguments); } gtag('js', new Date()); gtag('config', 'AW-16598474973');
-  </script>
-  <!-- End Google Ads tag (gtag.js) -->
 </head>
 
 <body>
   <div id="app"></div>
   <script type="module" src="/src/main.js"></script>
 
-  <!-- Google Tag Manager (noscript) -->
-  <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-PSFK8LTF" height="0" width="0"
-      style="display:none;visibility:hidden"></iframe></noscript>
-  <!-- End Google Tag Manager (noscript) -->
-
-  <!-- Meta Pixel Code (noscript) -->
   <noscript>
+
+    <!-- Google Tag Manager (noscript) -->
+    <iframe src="https://www.googletagmanager.com/ns.html?id=GTM-PSFK8LTF" height="0" width="0"
+      style="display:none;visibility:hidden"></iframe>
+
+    <!-- Meta Pixel Code (noscript) -->
     <img height="1" width="1" style="display:none"
       src="https://www.facebook.com/tr?id=3783837618554436&ev=PageView&noscript=1" />
+
   </noscript>
-  <!-- End Meta Pixel Code (noscript) -->
 
   <div class="floater-whatsapp">
     <a
