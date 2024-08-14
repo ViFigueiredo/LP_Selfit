@@ -118,7 +118,10 @@
   </div>
 
   <footer class="absolute w-full flex justify-center items-center text-center p-2 bg-red-600 text-white">
-    2024 Selfit © Todos os direitos reservados. Desenvolvido por Center Soluções.
+    <span class="w-full">
+      2024 Selfit © Todos os direitos reservados. Desenvolvido por Center Soluções.
+      <router-link to="/admin" class="text-red-600 hover:text-white justify-start"> >Admin< </router-link>
+    </span>
   </footer>
 </template>
 

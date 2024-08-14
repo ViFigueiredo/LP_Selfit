@@ -1,7 +1,10 @@
 <template>
   <div class="w-full h-full flex flex-col justify-center items-center">
-    <div class="w-full pt-5">
+    <div class="w-full pt-5 px-10 flex justify-between">
       <h1 class="text-center text-3xl">Central Admin LP</h1>
+      <h1 class="text-center text-3xl">
+        <router-link to="/" class="text-sm"> <-- Voltar </router-link>
+      </h1>
     </div>
 
     <div class="flex w-full p-10 justify-start items-start space-x-10">
