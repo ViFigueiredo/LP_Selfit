@@ -139,8 +139,6 @@ import { collection, getDocs, setDoc, doc } from 'firebase/firestore';
 import { format } from 'date-fns';
 import axios from 'axios';
 
-const myip = ref();
-
 const showModal = ref(false);
 const selfit = ref([]);
 const data = [
@@ -316,7 +314,7 @@ async function tracker(unidade) {
   });
 
   geo = JSON.parse(geo.data);
-  console.log(geo);
+  // console.log(geo);
 
   const unidadesRef = collection(db, 'acessos');
   await setDoc(doc(unidadesRef, `${myip}_${unidade}_${Date.now()}`), {

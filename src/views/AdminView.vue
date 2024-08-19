@@ -11,7 +11,7 @@
       <div class="flex space-x-40">
         <div class="">
           <h1>Inserir nova unidade:</h1>
-          <form class="flex flex-col space-y-3" @submit.prevent="handleSubmit()">
+          <form class="flex flex-col space-y-3" @submit.prevent="setSelfit(uf, cidade, bairro, endereco, url)">
             <div class="space-x-3 space-y-3">
               <input class="p-2 rounded-lg" type="text" placeholder="UF" v-model="uf" />
               <input class="p-2 rounded-lg" type="text" placeholder="Cidade" v-model="cidade" />
@@ -22,7 +22,7 @@
             </div>
             <div class="space-y-3">
               <input class="w-full p-2 rounded-lg" type="text" placeholder="URL" v-model="url" />
-              <button class="w-full p-2 rounded-lg bg-green-400 font-bold text-white hover:text-black" type="submit">
+              <button class="w-full p-2 rounded-lg bg-blue-400 font-bold text-white hover:text-black" type="submit">
                 Inserir
               </button>
             </div>
@@ -40,6 +40,30 @@
         </div>
       </div>
 
+      <div class="flex w-full space-x-5 justify-center items-center border-t-2 border-gray-400 pt-10">
+        <div class="flex rounded-lg w-[200px] h-16 bg-purple-400 justify-center items-center">
+          <div class="flex flex-col w-[70%]">
+            <span class="flex w-full items-center justify-center text-center material-symbols-outlined"> group </span>
+            <span class="flex w-full items-center justify-center text-center">Total Acessos</span>
+          </div>
+          <span
+            class="flex w-[30%] h-full justify-center items-center text-center text-2xl font-bold border-l-2 border-gray-200"
+            >{{
+          }}</span>
+        </div>
+
+        <div class="flex rounded-lg w-[200px] h-16 bg-green-400 justify-center items-center">
+          <div class="flex flex-col w-[70%]">
+            <span class="flex w-full items-center justify-center text-center material-symbols-outlined"> person </span>
+            <span class="flex w-full items-center justify-center text-center">Acessos únicos</span>
+          </div>
+          <span
+            class="flex w-[30%] h-full justify-center items-center text-center text-2xl font-bold border-l-2 border-gray-200"
+            >{{
+          }}</span>
+        </div>
+      </div>
+
       <div class="h-[500px] overflow-x-auto overflow-y-auto">
         <table class="w-full text-start">
           <tr>
@@ -48,25 +72,17 @@
             <th class="px-5">Acessos Únicos</th>
             <th class="px-5">Acessos Simultâneos</th>
           </tr>
-          <tr v-for="unidade in selfit">
-            <td class="px-5">{{ unidade.estado }}</td>
-            <td class="px-5">{{ unidade.unidade }}</td>
+          <!-- <tr v-for="unidade in selfit">
+            <td class="px-5">{{ unidade }}</td>
             <td class="px-5">{{}}</td>
             <td class="px-5">{{}}</td>
-          </tr>
+            <td class="px-5">{{}}</td>
+          </tr> -->
         </table>
       </div>
     </div>
   </div>
 </template>
-
-<style scoped>
-table,
-th,
-td {
-  border: 1px solid black;
-}
-</style>
 
 <script lang="js" setup>
 import { ref } from 'vue';
@@ -82,34 +98,63 @@ const url = ref();
 const selectedFile = ref();
 const selfit = ref([]);
 
-async function getSelfit() {
-  const unidadesRef = collection(db, 'unidades');
-  const result = await getDocs(unidadesRef);
-  result.forEach((doc) => {
-    selfit.value.push({
-      estado: doc.id,
-      unidade: doc.data().BAIRRO
-    });
-  });
+// async function getAcessos() {
+//   const acessosRef = collection(db, 'acessos');
+//   const result = await getDocs(acessosRef);
+//   result.forEach((doc) => {
+//     // acessos.value.push({
+//     //   datetime: doc.data().datetime,
+//     //   geolocation: doc.data().geolocation,
+//     //   unidade: doc.data().unidade
+//     // });
+//   });
 
-  selfit.value.sort();
-}
+//   console.log(acessos.value);
+// }
 
-const handleSubmit = async () => {
-  const unidadesRef = collection(db, 'unidades');
-  await setDoc(
-    doc(unidadesRef, `${uf.value.toUpperCase()}_${cidade.value.toUpperCase()}_${bairro.value.toUpperCase()}`),
-    {
-      UF: uf.value.toUpperCase(),
-      CIDADE: cidade.value.toUpperCase(),
-      BAIRRO: bairro.value.toUpperCase(),
-      ENDERECO: endereco.value.toUpperCase(),
-      URL: url.value.toLowerCase()
+// async function getSelfit() {
+//   const unidadesRef = collection(db, 'unidades');
+//   const result = await getDocs(unidadesRef);
+//   result.forEach((doc) => {
+//     selfit.value.push({
+//       estado: doc.id,
+//       unidade: doc.data().BAIRRO
+//     });
+//   });
+
+//   selfit.value.sort();
+// }
+
+function setSelfit(uf = null, cidade = null, bairro = null, endereco = null, url = null) {
+  const ufValue = uf?.value || uf;
+  const cidadeValue = cidade?.value || cidade;
+  const bairroValue = bairro?.value || bairro;
+  const enderecoValue = endereco?.value || endereco;
+  const urlValue = url?.value || url;
+
+  const docRef = doc(db, 'selfit', 'unidades');
+
+  const dadosUnidade = {
+    [`${ufValue.toUpperCase()}-${bairroValue.toUpperCase().replace(/\s/g, '_')}`]: {
+      uf: ufValue.toUpperCase(),
+      cidade: cidadeValue.toUpperCase(),
+      bairro: bairroValue.toUpperCase(),
+      endereco: enderecoValue.toUpperCase(),
+      url: urlValue
     }
-  );
-  location.reload();
-};
+  };
 
+  setDoc(docRef, dadosUnidade, { merge: true })
+    .then(() => {
+      console.log('Dados adicionados com sucesso!');
+      setTimeout(() => {
+        location.reload();
+      }, 1000);
+    })
+    .catch((error) => {
+      console.error('Erro ao adicionar dados:', error);
+    });
+}
 const handleFileChange = (event) => {
   selectedFile.value = event.target.files[0];
 };
@@ -121,7 +166,7 @@ const fileSubmit = async () => {
     reader.onload = async (event) => {
       try {
         const jsonContent = JSON.parse(event.target.result);
-        const unidadesRef = collection(db, 'selfit',);
+        const unidadesRef = collection(db, 'selfit');
 
         for (const obj of jsonContent) {
           await setDoc(
@@ -151,12 +196,19 @@ const fileSubmit = async () => {
 };
 
 onMounted(async () => {
-  getSelfit();
+  // getSelfit();
+  // getAcessos();
 });
 </script>
 
 <style scoped>
 #file-upload-button {
   display: none;
+}
+
+table,
+th,
+td {
+  border: 1px solid black;
 }
 </style>
