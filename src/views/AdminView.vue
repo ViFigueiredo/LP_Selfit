@@ -59,25 +59,26 @@
           </div>
           <span
             class="flex w-[30%] h-full justify-center items-center text-center text-2xl font-bold border-l-2 border-gray-200"
-            >{{ acessosUnicos() }}</span
-          >
+            >{{
+          }}</span>
         </div>
       </div>
 
       <DataTable
-        class="h-[400px] overflow-x-auto overflow-y-auto"
-        :value="unidades"
-        removableSort
+        class="h-[400px] overflow-auto"
         tableStyle="min-width: 50rem"
+        sortMode="multiple"
+        removableSort
+        :value="unidades"
       >
-        <Column field="uf" header="Origem" sortable style="width: 25%">
+        <Column field="uf" header="Origem" sortable> </Column>
+        <Column class="" field="bairro" header="Unidade" sortable> </Column>
+        <Column class="ml-5" field="acessos" header="Acessos" sortable>
           <template #body="slotProps">
-            {{ obterNomeEstado(slotProps.data.uf).toUpperCase() }}
+            {{ slotProps.data.acessos.length }}
           </template>
         </Column>
-        <Column field="bairro" header="Unidade" sortable style="width: 25%"> </Column>
-        <Column field="acessos" header="Acessos" sortable style="width: 25%"></Column>
-        <Column field="acessosUnicos" header="Acessos Únicos" sortable style="width: 25%"></Column>
+        <Column field="acessosUnicos" header="Acessos Únicos" sortable></Column>
       </DataTable>
 
       <div class="h-10"></div>
@@ -108,40 +109,6 @@ const acessosUnicos = () => {
   return [...new Set(acessos.value)].length;
 };
 
-function obterNomeEstado(sigla) {
-  const ufs = {
-    AC: 'Acre',
-    AL: 'Alagoas',
-    AP: 'Amapá',
-    AM: 'Amazonas',
-    BA: 'Bahia',
-    CE: 'Ceará',
-    DF: 'Distrito Federal',
-    ES: 'Espírito Santo',
-    GO: 'Goiás',
-    MA: 'Maranhão',
-    MT: 'Mato Grosso',
-    MS: 'Mato Grosso do Sul',
-    MG: 'Minas Gerais',
-    PA: 'Pará',
-    PB: 'Paraíba',
-    PR: 'Paraná',
-    PE: 'Pernambuco',
-    PI: 'Piauí',
-    RJ: 'Rio de Janeiro',
-    RN: 'Rio Grande do Norte',
-    RS: 'Rio Grande do Sul',
-    RO: 'Rondônia',
-    RR: 'Roraima',
-    SC: 'Santa Catarina',
-    SP: 'São Paulo',
-    SE: 'Sergipe',
-    TO: 'Tocantins'
-  };
-
-  return ufs[sigla] || 'Estado não encontrado';
-}
-
 async function getUnidades() {
   const querySnapshot = await getDocs(collection(db, 'selfit'));
   const documents = [];
@@ -152,8 +119,21 @@ async function getUnidades() {
 
   let tempUnidades = [documents[1]];
 
-  /* unidades */
   unidades.value = Object.values(tempUnidades[0]);
+
+  // Inicialize a propriedade "acessos" como um array vazio para cada unidade
+  unidades.value.forEach((unidade) => {
+    unidade.acessos = [];
+  });
+
+  // Percorra os acessos e adicione-os às unidades correspondentes
+  acessos.value.forEach((acesso) => {
+    const matchingUnidade = unidades.value.find((unidade) => unidade.bairro === acesso.unidade);
+
+    if (matchingUnidade) {
+      matchingUnidade.acessos.push(acesso);
+    }
+  });
 }
 
 async function getAcessos() {
@@ -164,9 +144,7 @@ async function getAcessos() {
     documents.push(doc.data());
   });
 
-  /* acessos */
   acessos.value = documents;
-  // console.log(acessos.value);
 }
 
 async function setSelfit(uf = null, cidade = null, bairro = null, endereco = null, url = null) {
@@ -190,6 +168,7 @@ async function setSelfit(uf = null, cidade = null, bairro = null, endereco = nul
 
   await setDoc(docRef, dadosUnidade, { merge: true });
 }
+
 const handleFileChange = (event) => {
   selectedFile.value = event.target.files[0];
 };
@@ -219,8 +198,8 @@ const fileSubmit = async () => {
 };
 
 onMounted(async () => {
-  getUnidades();
-  getAcessos();
+  await getAcessos();
+  await getUnidades();
 });
 </script>
 
