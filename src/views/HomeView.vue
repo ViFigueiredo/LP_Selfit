@@ -57,16 +57,16 @@
               <ul v-if="showUnidades[uf] && showUnidades[uf][cidade]">
                 <li
                   v-for="unidade in unidades"
-                  :key="unidade.CIDADE"
+                  :key="unidade.cidade"
                   class="w-full flex justify-end text-white hover:bg-red-300 hover:text-black"
                 >
                   <a
-                    :href="unidade.URL"
+                    :href="unidade.url"
                     target="_blank"
                     class="cursor-pointer font-bold p-3"
-                    @click="tracker(unidade.BAIRRO)"
+                    @click="tracker(unidade.bairro)"
                   >
-                    {{ unidade.BAIRRO }}
+                    {{ unidade.bairro }}
                   </a>
                 </li>
               </ul>
@@ -215,12 +215,12 @@ const ufs = {
 
 const agrupadosPorUF = computed(() => {
   let grupos = selfit.value.reduce((grupos, objeto) => {
-    const chaveUF = objeto.UF;
+    const chaveUF = objeto.uf;
     if (!grupos[chaveUF]) {
       grupos[chaveUF] = {};
     }
 
-    const chaveCidade = objeto.CIDADE;
+    const chaveCidade = objeto.cidade;
     if (!grupos[chaveUF][chaveCidade]) {
       grupos[chaveUF][chaveCidade] = [];
     }
@@ -234,7 +234,7 @@ const agrupadosPorUF = computed(() => {
     grupos[uf] = Object.keys(grupos[uf])
       .sort()
       .reduce((obj, key) => {
-        obj[key] = grupos[uf][key].sort((a, b) => a.CIDADE.localeCompare(b.CIDADE));
+        obj[key] = grupos[uf][key].sort((a, b) => a.cidade.localeCompare(b.cidade));
         return obj;
       }, {});
   }
@@ -291,11 +291,19 @@ function collapseAll() {
 }
 
 async function getSelfit() {
-  const selfitRef = collection(db, 'unidades');
-  const selfitDocs = await getDocs(selfitRef);
-  selfitDocs.forEach((doc) => {
-    selfit.value.push(doc.data());
+  const querySnapshot = await getDocs(collection(db, 'selfit'));
+  const documents = [];
+
+  querySnapshot.forEach((doc) => {
+    documents.push(doc.data());
   });
+
+  let tempUnidades = [documents[0]];
+
+  selfit.value = Object.values(tempUnidades[0]);
+
+  // console.log(selfit);
+  
 }
 
 async function tracker(unidade) {

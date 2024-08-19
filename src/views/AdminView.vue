@@ -105,10 +105,6 @@ const selectedFile = ref();
 const acessos = ref([]);
 const unidades = ref([]);
 
-const acessosUnicos = () => {
-  return [...new Set(acessos.value)].length;
-};
-
 async function getUnidades() {
   const querySnapshot = await getDocs(collection(db, 'selfit'));
   const documents = [];
@@ -117,7 +113,7 @@ async function getUnidades() {
     documents.push(doc.data());
   });
 
-  let tempUnidades = [documents[1]];
+  let tempUnidades = [documents[0]];
 
   unidades.value = Object.values(tempUnidades[0]);
 
