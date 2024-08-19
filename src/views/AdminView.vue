@@ -48,8 +48,8 @@
           </div>
           <span
             class="flex w-[30%] h-full justify-center items-center text-center text-2xl font-bold border-l-2 border-gray-200"
-            >{{
-          }}</span>
+            >{{ acessos.length }}</span
+          >
         </div>
 
         <div class="flex rounded-lg w-[200px] h-16 bg-green-400 justify-center items-center">
@@ -59,27 +59,28 @@
           </div>
           <span
             class="flex w-[30%] h-full justify-center items-center text-center text-2xl font-bold border-l-2 border-gray-200"
-            >{{
-          }}</span>
+            >{{ acessosUnicos() }}</span
+          >
         </div>
       </div>
 
-      <div class="h-[500px] overflow-x-auto overflow-y-auto">
-        <table class="w-full text-start">
-          <tr>
-            <th class="px-5">Origem</th>
-            <th class="px-5">Unidade</th>
-            <th class="px-5">Acessos Únicos</th>
-            <th class="px-5">Acessos Simultâneos</th>
-          </tr>
-          <!-- <tr v-for="unidade in selfit">
-            <td class="px-5">{{ unidade }}</td>
-            <td class="px-5">{{}}</td>
-            <td class="px-5">{{}}</td>
-            <td class="px-5">{{}}</td>
-          </tr> -->
-        </table>
-      </div>
+      <DataTable
+        class="h-[400px] overflow-x-auto overflow-y-auto"
+        :value="unidades"
+        removableSort
+        tableStyle="min-width: 50rem"
+      >
+        <Column field="uf" header="Origem" sortable style="width: 25%">
+          <template #body="slotProps">
+            {{ obterNomeEstado(slotProps.data.uf).toUpperCase() }}
+          </template>
+        </Column>
+        <Column field="bairro" header="Unidade" sortable style="width: 25%"> </Column>
+        <Column field="acessos" header="Acessos" sortable style="width: 25%"></Column>
+        <Column field="acessosUnicos" header="Acessos Únicos" sortable style="width: 25%"></Column>
+      </DataTable>
+
+      <div class="h-10"></div>
     </div>
   </div>
 </template>
@@ -89,43 +90,86 @@ import { ref } from 'vue';
 import db from '../firebase/init.js';
 import { collection, doc, setDoc, getDocs } from 'firebase/firestore';
 import { onMounted } from 'vue';
+import { useToast } from 'vue-toastification';
+import DataTable from 'primevue/datatable';
+import Column from 'primevue/column';
 
+const toast = useToast();
 const uf = ref();
 const cidade = ref();
 const bairro = ref();
 const endereco = ref();
 const url = ref();
 const selectedFile = ref();
-const selfit = ref([]);
+const acessos = ref([]);
+const unidades = ref([]);
 
-// async function getAcessos() {
-//   const acessosRef = collection(db, 'acessos');
-//   const result = await getDocs(acessosRef);
-//   result.forEach((doc) => {
-//     // acessos.value.push({
-//     //   datetime: doc.data().datetime,
-//     //   geolocation: doc.data().geolocation,
-//     //   unidade: doc.data().unidade
-//     // });
-//   });
+const acessosUnicos = () => {
+  return [...new Set(acessos.value)].length;
+};
 
-//   console.log(acessos.value);
-// }
+function obterNomeEstado(sigla) {
+  const ufs = {
+    AC: 'Acre',
+    AL: 'Alagoas',
+    AP: 'Amapá',
+    AM: 'Amazonas',
+    BA: 'Bahia',
+    CE: 'Ceará',
+    DF: 'Distrito Federal',
+    ES: 'Espírito Santo',
+    GO: 'Goiás',
+    MA: 'Maranhão',
+    MT: 'Mato Grosso',
+    MS: 'Mato Grosso do Sul',
+    MG: 'Minas Gerais',
+    PA: 'Pará',
+    PB: 'Paraíba',
+    PR: 'Paraná',
+    PE: 'Pernambuco',
+    PI: 'Piauí',
+    RJ: 'Rio de Janeiro',
+    RN: 'Rio Grande do Norte',
+    RS: 'Rio Grande do Sul',
+    RO: 'Rondônia',
+    RR: 'Roraima',
+    SC: 'Santa Catarina',
+    SP: 'São Paulo',
+    SE: 'Sergipe',
+    TO: 'Tocantins'
+  };
 
-// async function getSelfit() {
-//   const unidadesRef = collection(db, 'unidades');
-//   const result = await getDocs(unidadesRef);
-//   result.forEach((doc) => {
-//     selfit.value.push({
-//       estado: doc.id,
-//       unidade: doc.data().BAIRRO
-//     });
-//   });
+  return ufs[sigla] || 'Estado não encontrado';
+}
 
-//   selfit.value.sort();
-// }
+async function getUnidades() {
+  const querySnapshot = await getDocs(collection(db, 'selfit'));
+  const documents = [];
 
-function setSelfit(uf = null, cidade = null, bairro = null, endereco = null, url = null) {
+  querySnapshot.forEach((doc) => {
+    documents.push(doc.data());
+  });
+
+  let tempUnidades = [documents[1]];
+
+  /* unidades */
+  unidades.value = Object.values(tempUnidades[0]);
+}
+
+async function getAcessos() {
+  const querySnapshot = await getDocs(collection(db, 'acessos'));
+  const documents = [];
+
+  querySnapshot.forEach((doc) => {
+    documents.push(doc.data());
+  });
+
+  /* acessos */
+  acessos.value = documents;
+  // console.log(acessos.value);
+}
+
+async function setSelfit(uf = null, cidade = null, bairro = null, endereco = null, url = null) {
   const ufValue = uf?.value || uf;
   const cidadeValue = cidade?.value || cidade;
   const bairroValue = bairro?.value || bairro;
@@ -144,16 +188,7 @@ function setSelfit(uf = null, cidade = null, bairro = null, endereco = null, url
     }
   };
 
-  setDoc(docRef, dadosUnidade, { merge: true })
-    .then(() => {
-      console.log('Dados adicionados com sucesso!');
-      setTimeout(() => {
-        location.reload();
-      }, 1000);
-    })
-    .catch((error) => {
-      console.error('Erro ao adicionar dados:', error);
-    });
+  await setDoc(docRef, dadosUnidade, { merge: true });
 }
 const handleFileChange = (event) => {
   selectedFile.value = event.target.files[0];
@@ -166,29 +201,17 @@ const fileSubmit = async () => {
     reader.onload = async (event) => {
       try {
         const jsonContent = JSON.parse(event.target.result);
-        const unidadesRef = collection(db, 'selfit');
 
         for (const obj of jsonContent) {
-          await setDoc(
-            doc(unidadesRef, `${obj.UF.toUpperCase()}_${obj.CIDADE.toUpperCase()}_${obj.BAIRRO.toUpperCase()}`),
-            {
-              UF: obj.UF.toUpperCase(),
-              CIDADE: obj.CIDADE.toUpperCase(),
-              BAIRRO: obj.BAIRRO.toUpperCase(),
-              ENDERECO: obj.ENDERECO.toUpperCase(),
-              URL: obj.URL.toLowerCase()
-            },
-            { merge: false }
-          );
-          console.log('Inserido');
+          console.log('Inserindo unidades...');
+          await setSelfit(obj.UF, obj.CIDADE, obj.BAIRRO, obj.ENDERECO, obj.URL);
         }
-        console.log('Finalizado');
-        location.reload();
+
+        toast.success('Unidades inseridas com sucesso!');
       } catch (error) {
         console.error('Erro ao parsear o arquivo JSON:', error);
       }
     };
-
     reader.readAsText(selectedFile.value);
   } else {
     console.error('Por favor, selecione um arquivo JSON válido.');
@@ -196,8 +219,8 @@ const fileSubmit = async () => {
 };
 
 onMounted(async () => {
-  // getSelfit();
-  // getAcessos();
+  getUnidades();
+  getAcessos();
 });
 </script>
 
@@ -210,5 +233,9 @@ table,
 th,
 td {
   border: 1px solid black;
+}
+
+.floater-whatsapp {
+  display: hidden !important;
 }
 </style>
