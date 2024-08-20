@@ -32,7 +32,7 @@
         <div class="">
           <h1>Importar base de dados:</h1>
           <form class="flex flex-col space-y-5" @submit.prevent="fileSubmit()">
-            <input type="file" name="file" ref="files" @change="handleFileChange" />
+            <input type="file" name="file" ref="files" @change="handleFileChange()" />
             <button class="p-2 rounded-lg bg-blue-400 font-bold text-white hover:text-black" type="submit">
               Upload
             </button>
@@ -59,8 +59,8 @@
           </div>
           <span
             class="flex w-[30%] h-full justify-center items-center text-center text-2xl font-bold border-l-2 border-gray-200"
-            >{{
-          }}</span>
+            >{{ obterObjetosUnicosPorIPUnidade().length }}</span
+          >
         </div>
       </div>
 
@@ -78,7 +78,11 @@
             {{ slotProps.data.acessos.length }}
           </template>
         </Column>
-        <Column field="acessosUnicos" header="Acessos Únicos" sortable></Column>
+        <Column field="acessosUnicos" header="Acessos Únicos" sortable>
+          <template #body="slotProps">
+            {{ obterObjetosUnicosPorIP(slotProps.data.acessos).length }}
+          </template>
+        </Column>
       </DataTable>
 
       <div class="h-10"></div>
@@ -104,6 +108,38 @@ const url = ref();
 const selectedFile = ref();
 const acessos = ref([]);
 const unidades = ref([]);
+
+function obterObjetosUnicosPorIPUnidade() {
+    const mapa = new Map();
+    const newArray = [];
+
+    unidades.value.forEach((obj) => {
+        obj.acessos.forEach((acesso) => {
+            const ip = acesso.geolocation.ip;
+            if (!mapa.has(ip)) {
+                mapa.set(ip, true);
+                newArray.push(acesso);
+            }
+        });
+    });
+
+    return newArray;
+}
+
+function obterObjetosUnicosPorIP(arr) {
+  const mapa = new Map();
+  const newArray = [];
+
+  arr.forEach((obj) => {
+    const ip = obj.geolocation.ip;
+    if (!mapa.has(ip)) {
+      mapa.set(ip, true);
+      newArray.push(obj);
+    }
+  });
+
+  return newArray;
+}
 
 async function getUnidades() {
   const querySnapshot = await getDocs(collection(db, 'selfit'));
@@ -163,13 +199,14 @@ async function setSelfit(uf = null, cidade = null, bairro = null, endereco = nul
   };
 
   await setDoc(docRef, dadosUnidade, { merge: true });
+  toast.success('Inserido com sucesso.');
 }
 
-const handleFileChange = (event) => {
+function handleFileChange(event) {
   selectedFile.value = event.target.files[0];
-};
+}
 
-const fileSubmit = async () => {
+async function fileSubmit() {
   if (selectedFile.value && selectedFile.value.type === 'application/json') {
     const reader = new FileReader();
 
@@ -191,7 +228,7 @@ const fileSubmit = async () => {
   } else {
     console.error('Por favor, selecione um arquivo JSON válido.');
   }
-};
+}
 
 onMounted(async () => {
   await getAcessos();
