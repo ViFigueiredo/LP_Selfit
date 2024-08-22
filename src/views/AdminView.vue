@@ -32,7 +32,7 @@
         <div class="">
           <h1>Importar base de dados:</h1>
           <form class="flex flex-col space-y-5" @submit.prevent="fileSubmit()">
-            <input type="file" name="file" ref="files" @change="handleFileChange()" />
+            <input type="file" id="file-upload-button" name="file" ref="files" @change="handleFileChange()" />
             <button class="p-2 rounded-lg bg-blue-400 font-bold text-white hover:text-black" type="submit">
               Upload
             </button>
@@ -62,24 +62,85 @@
             >{{ obterObjetosUnicosPorIPUnidade().length }}</span
           >
         </div>
+
+        <div class="flex rounded-lg w-[200px] h-16 bg-yellow-400 justify-center items-center">
+          <div class="flex flex-col w-[70%]">
+            <span class="flex w-full items-center justify-center text-center material-symbols-outlined"> event </span>
+            <span class="flex w-full items-center justify-center text-center">No período</span>
+          </div>
+          <span
+            class="flex w-[30%] h-full justify-center items-center text-center text-2xl font-bold border-l-2 border-gray-200"
+            >{{ obterObjetosUnicosPorIPUnidade().length }}</span
+          >
+        </div>
       </div>
 
       <DataTable
-        class="h-[400px] overflow-auto"
-        tableStyle="min-width: 50rem"
+        class="w-full h-[500px] overflow-auto"
         sortMode="multiple"
+        optionLabel="label"
+        dataKey="label"
+        scrollHeight="75%"
+        columnResizeMode="fit"
+        filterDisplay="row"
+        scrollable
         removableSort
+        resizableColumns
+        showGridlines
+        v-model:filters="filters"
+        :globalFilterFields="['uf', 'bairro']"
+        :size="size.value"
         :value="unidades"
       >
-        <Column field="uf" header="Origem" sortable> </Column>
-        <Column class="" field="bairro" header="Unidade" sortable> </Column>
-        <Column class="ml-5" field="acessos" header="Acessos" sortable>
+        <template #header class="flex">
+          <div class="flex justify-between">
+            <div class="mt-5">
+              <DatePicker
+                v-model="dates"
+                selectionMode="range"
+                dateFormat="dd/mm/yy"
+                placeholder="Período"
+                showIcon
+                fluid
+                showButtonBar
+                :showOnFocus="true"
+                :manualInput="false"
+              />
+            </div>
+            <div class="mt-5">
+              {{ dates }}
+            </div>
+          </div>
+        </template>
+        <Column field="uf" header="Origem" sortable tableStyle="background-color: red">
+          <template #filter="{ filterModel, filterCallback }" class="w-full">
+            <InputText
+              class="w-full"
+              v-model="filterModel.value"
+              type="text"
+              @input="filterCallback()"
+              placeholder="Pesquisar..."
+            />
+          </template>
+        </Column>
+        <Column field="bairro" header="Unidade" sortable>
+          <template #filter="{ filterModel, filterCallback }" class="w-full">
+            <InputText
+              class="w-full"
+              v-model="filterModel.value"
+              type="text"
+              @input="filterCallback()"
+              placeholder="Pesquisar..."
+            />
+          </template>
+        </Column>
+        <Column field="acessos" header="Acessos" sortable>
           <template #body="slotProps">
             {{ slotProps.data.acessos.length }}
           </template>
         </Column>
         <Column field="acessosUnicos" header="Acessos Únicos" sortable>
-          <template #body="slotProps">
+          <template #body="slotProps" id="teste">
             {{ obterObjetosUnicosPorIP(slotProps.data.acessos).length }}
           </template>
         </Column>
@@ -91,13 +152,11 @@
 </template>
 
 <script lang="js" setup>
-import { ref } from 'vue';
-import db from '../firebase/init.js';
-import { collection, doc, setDoc, getDocs } from 'firebase/firestore';
+import { ref, watch } from 'vue';
 import { onMounted } from 'vue';
 import { useToast } from 'vue-toastification';
-import DataTable from 'primevue/datatable';
-import Column from 'primevue/column';
+import { FilterMatchMode } from '@primevue/core/api';
+import { getAcessos, getUnidades } from '../services/Selfit';
 
 const toast = useToast();
 const uf = ref();
@@ -108,22 +167,70 @@ const url = ref();
 const selectedFile = ref();
 const acessos = ref([]);
 const unidades = ref([]);
+const unidadesOriginal = ref([]);
+const dates = ref([]);
+const size = ref({ label: 'G', value: 'large' });
+const filters = ref({
+  global: { value: null, matchMode: FilterMatchMode.CONTAINS },
+  uf: { value: null, matchMode: FilterMatchMode.CONTAINS },
+  bairro: { value: null, matchMode: FilterMatchMode.CONTAINS }
+});
+
+onMounted(async () => {
+  unidades.value = await getUnidades();
+
+  watch(dates, () => {
+    if (dates.value) {
+      const [startDate, endDate] = dates.value;
+
+      if (startDate && endDate) {
+        unidades.value.forEach((unidade, index) => {
+          unidade.acessos = [...filterObjectsByDateRange(unidade.acessos, startDate, endDate)];
+        });
+      }
+    } else {
+      dates.value = [];
+      unidades.value = unidadesOriginal.value;
+    }
+  });
+});
+
+function filterObjectsByDateRange(objectsArray, startDateStr, endDateStr) {
+  const startDate = Date.parse(startDateStr);
+  const endDate = Date.parse(endDateStr);
+
+  return objectsArray.filter((obj) => {
+    const objDate = Date.parse(converterDataHora(obj.datetime + 'Z'));
+
+    return objDate >= startDate && objDate <= endDate;
+  });
+}
+
+function converterDataHora(dataHora) {
+  const [data, hora] = dataHora.split('T'); // Divida a string em data e hora
+  const [dia, mes, ano] = data.split('-'); // Extraia os componentes da data
+  const dataFormatada = `${ano}-${mes.padStart(2, '0')}-${dia.padStart(2, '0')}`; // Formate a data no formato desejado (YYYY-MM-DD)
+  const horaFormatada = 'T03:00:00.000Z'; // Formate a hora no formato desejado (HH:MM:SS.SSSZ)
+  const dataHoraFormatada = `${dataFormatada}${horaFormatada}`; // Combine a data e a hora formatadas
+
+  return dataHoraFormatada;
+}
 
 function obterObjetosUnicosPorIPUnidade() {
-    const mapa = new Map();
-    const newArray = [];
+  const mapa = new Map();
+  const newArray = [];
 
-    unidades.value.forEach((obj) => {
-        obj.acessos.forEach((acesso) => {
-            const ip = acesso.geolocation.ip;
-            if (!mapa.has(ip)) {
-                mapa.set(ip, true);
-                newArray.push(acesso);
-            }
-        });
+  unidades.value.forEach((obj) => {
+    obj.acessos.forEach((acesso) => {
+      const ip = acesso.geolocation.ip;
+      if (!mapa.has(ip)) {
+        mapa.set(ip, true);
+        newArray.push(acesso);
+      }
     });
+  });
 
-    return newArray;
+  return newArray;
 }
 
 function obterObjetosUnicosPorIP(arr) {
@@ -139,67 +246,6 @@ function obterObjetosUnicosPorIP(arr) {
   });
 
   return newArray;
-}
-
-async function getUnidades() {
-  const querySnapshot = await getDocs(collection(db, 'selfit'));
-  const documents = [];
-
-  querySnapshot.forEach((doc) => {
-    documents.push(doc.data());
-  });
-
-  let tempUnidades = [documents[0]];
-
-  unidades.value = Object.values(tempUnidades[0]);
-
-  // Inicialize a propriedade "acessos" como um array vazio para cada unidade
-  unidades.value.forEach((unidade) => {
-    unidade.acessos = [];
-  });
-
-  // Percorra os acessos e adicione-os às unidades correspondentes
-  acessos.value.forEach((acesso) => {
-    const matchingUnidade = unidades.value.find((unidade) => unidade.bairro === acesso.unidade);
-
-    if (matchingUnidade) {
-      matchingUnidade.acessos.push(acesso);
-    }
-  });
-}
-
-async function getAcessos() {
-  const querySnapshot = await getDocs(collection(db, 'acessos'));
-  const documents = [];
-
-  querySnapshot.forEach((doc) => {
-    documents.push(doc.data());
-  });
-
-  acessos.value = documents;
-}
-
-async function setSelfit(uf = null, cidade = null, bairro = null, endereco = null, url = null) {
-  const ufValue = uf?.value || uf;
-  const cidadeValue = cidade?.value || cidade;
-  const bairroValue = bairro?.value || bairro;
-  const enderecoValue = endereco?.value || endereco;
-  const urlValue = url?.value || url;
-
-  const docRef = doc(db, 'selfit', 'unidades');
-
-  const dadosUnidade = {
-    [`${ufValue.toUpperCase()}-${bairroValue.toUpperCase().replace(/\s/g, '_')}`]: {
-      uf: ufValue.toUpperCase(),
-      cidade: cidadeValue.toUpperCase(),
-      bairro: bairroValue.toUpperCase(),
-      endereco: enderecoValue.toUpperCase(),
-      url: urlValue
-    }
-  };
-
-  await setDoc(docRef, dadosUnidade, { merge: true });
-  toast.success('Inserido com sucesso.');
 }
 
 function handleFileChange(event) {
@@ -229,25 +275,4 @@ async function fileSubmit() {
     console.error('Por favor, selecione um arquivo JSON válido.');
   }
 }
-
-onMounted(async () => {
-  await getAcessos();
-  await getUnidades();
-});
 </script>
-
-<style scoped>
-#file-upload-button {
-  display: none;
-}
-
-table,
-th,
-td {
-  border: 1px solid black;
-}
-
-.floater-whatsapp {
-  display: hidden !important;
-}
-</style>

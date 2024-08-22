@@ -64,11 +64,14 @@ async function getAcessos(acessos) {
   });
 
   acessos = documents;
+  return acessos;
 }
 
-async function getUnidades(unidadesOriginal, unidades, acessos) {
+async function getUnidades() {
   const querySnapshot = await getDocs(collection(db, 'selfit'));
-  const documents = [];
+  let documents = [];
+  let unidades = [];
+  let acessos = [];
 
   querySnapshot.forEach((doc) => {
     documents.push(doc.data());
@@ -80,19 +83,20 @@ async function getUnidades(unidadesOriginal, unidades, acessos) {
 
   // Inicialize a propriedade "acessos" como um array vazio para cada unidade
   unidades.forEach((unidade) => {
-    unidade = [];
+    unidade.acessos = [];
   });
 
   // Percorra os acessos e adicione-os às unidades correspondentes
+  acessos = await getAcessos();
   acessos.forEach((acesso) => {
-    const matchingUnidade = unidades.find((unidade) => unidade.bairro === acesso.unidade);
+    let matchingUnidade = unidades.find((unidade) => unidade.bairro === acesso.unidade);
 
     if (matchingUnidade) {
       matchingUnidade.acessos.push(acesso);
     }
   });
 
-  unidadesOriginal = unidades;
+  return unidades;
 }
 
 // exportar função
