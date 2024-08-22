@@ -134,10 +134,8 @@
 
 <script setup lang="js">
 import { ref, onMounted, onUnmounted, computed } from 'vue';
-import db from '../firebase/init.js';
-import { collection, getDocs, setDoc, doc } from 'firebase/firestore';
-import { format } from 'date-fns';
-import axios from 'axios';
+import { getSelfit, setAcessos } from '../services/Selfit.js';
+import getGeolocation from '../services/Geolocation.js';
 
 const showModal = ref(false);
 const selfit = ref([]);
@@ -247,16 +245,33 @@ const agrupadosPorUF = computed(() => {
     }, {});
 });
 
-function nextSlide() {
-  currentIndex.value = (currentIndex.value + 1) % carouselItems.value.length;
+onMounted(async () => {
+  window.addEventListener('keydown', keydownHandler);
+  setInterval(nextSlide, 5000);
+});
+
+onUnmounted(() => {
+  window.removeEventListener('keydown', keydownHandler);
+});
+
+async function tracker(unidade) {
+  const geo = await getGeolocation();
+  await setAcessos(unidade, geo)
 }
 
-function prevSlide() {
-  currentIndex.value = (currentIndex.value - 1 + carouselItems.value.length) % carouselItems.value.length;
+function toggleUnidades(uf, cidade) {
+  if (!showUnidades.value[uf]) {
+    showUnidades.value[uf] = {};
+  }
+  showUnidades.value[uf][cidade] = !showUnidades.value[uf][cidade];
+}
+
+function toggleCidades(uf) {
+  showCidades.value[uf] = !showCidades.value[uf];
 }
 
 async function toggleModal(event) {
-  await getSelfit();
+  selfit.value = await getSelfit();
 
   if (
     event.target.id === 'modal-shadow' ||
@@ -274,78 +289,18 @@ function keydownHandler(event) {
   }
 }
 
-function toggleCidades(uf) {
-  showCidades.value[uf] = !showCidades.value[uf];
-}
-
-function toggleUnidades(uf, cidade) {
-  if (!showUnidades.value[uf]) {
-    showUnidades.value[uf] = {};
-  }
-  showUnidades.value[uf][cidade] = !showUnidades.value[uf][cidade];
-}
-
 function collapseAll() {
   showCidades.value = {};
   showUnidades.value = {};
 }
 
-async function getSelfit() {
-  const querySnapshot = await getDocs(collection(db, 'selfit'));
-  const documents = [];
-
-  querySnapshot.forEach((doc) => {
-    documents.push(doc.data());
-  });
-
-  let tempUnidades = [documents[0]];
-
-  selfit.value = Object.values(tempUnidades[0]);
-
-  // console.log(selfit);
-  
+function nextSlide() {
+  currentIndex.value = (currentIndex.value + 1) % carouselItems.value.length;
 }
 
-async function tracker(unidade) {
-  const myip = await fetch('https://api.ipify.org?format=json')
-    .then((x) => x.json())
-    .then(({ ip }) => {
-      return ip;
-    });
-
-  // console.log(myip);
-
-  let geo = await axios({
-    method: 'get',
-    url: `https://api.ipgeolocation.io/ipgeo?apiKey=284fbe5eec3f42ee9c520800e8efab20&ip=${myip}`,
-    responseType: 'application/json'
-  });
-
-  geo = JSON.parse(geo.data);
-  // console.log(geo);
-
-  const unidadesRef = collection(db, 'acessos');
-  await setDoc(doc(unidadesRef, `${myip}_${unidade}_${Date.now()}`), {
-    ip: myip,
-    unidade: unidade,
-    geolocation: {
-      ip: geo.ip,
-      city: geo.city,
-      state_prov: geo.state_prov,
-      zipcode: geo.zipcode
-    },
-    datetime: format(new Date(), "dd-MM-yyyy'T'HH:mm:ss.SSS")
-  });
+function prevSlide() {
+  currentIndex.value = (currentIndex.value - 1 + carouselItems.value.length) % carouselItems.value.length;
 }
-
-onMounted(async () => {
-  window.addEventListener('keydown', keydownHandler);
-  setInterval(nextSlide, 5000);
-});
-
-onUnmounted(() => {
-  window.removeEventListener('keydown', keydownHandler);
-});
 </script>
 
 <style scoped>
