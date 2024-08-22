@@ -177,8 +177,10 @@ const filters = ref({
 });
 
 onMounted(async () => {
+  /* TODO implementar dados de sessão para unidades e acessos */
   unidades.value = await getUnidades();
 
+  /* TODO revisar atualização de tabela quando um periodo for limpado */
   watch(dates, () => {
     if (dates.value) {
       const [startDate, endDate] = dates.value;

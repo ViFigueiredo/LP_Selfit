@@ -256,7 +256,7 @@ onUnmounted(() => {
 
 async function tracker(unidade) {
   const geo = await getGeolocation();
-  await setAcessos(unidade, geo)
+  await setAcessos(unidade, geo);
 }
 
 function toggleUnidades(uf, cidade) {
@@ -271,6 +271,7 @@ function toggleCidades(uf) {
 }
 
 async function toggleModal(event) {
+  /* TODO implementar dados de sessão para unidades e acessos */
   selfit.value = await getSelfit();
 
   if (
