@@ -20,15 +20,16 @@ async function setAcessos(unidade, geo) {
 async function getSelfit() {
   const querySnapshot = await getDocs(collection(db, 'selfit'));
   const documents = [];
+  let tempUnidades = [];
   let selfit = [];
 
   querySnapshot.forEach((doc) => {
     documents.push(doc.data());
   });
 
-  let tempUnidades = [documents[0]];
-
-  return (selfit = Object.values(tempUnidades[0]));
+  tempUnidades = [documents[0]];
+  selfit = Object.values(tempUnidades[0]);
+  return selfit;
 }
 
 async function setSelfit(uf = null, cidade = null, bairro = null, endereco = null, url = null) {
