@@ -119,7 +119,7 @@ import { ref, onMounted, onUnmounted, computed } from 'vue';
 import { getSelfit, setAcessos } from '../services/Selfit.js';
 import getGeolocation from '../services/Geolocation.js';
 
-const showModal = ref(true);
+const showModal = ref(false);
 const selfit = ref([]);
 const data = [
   {
