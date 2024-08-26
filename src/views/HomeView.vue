@@ -4,23 +4,9 @@
           <img src="./assets/img/banner_maes.png" class="w-full h-full" alt="banner" />
         </header> -->
 
-    <div class="flex flex-col">
-      <div class="relative h-6 bg-gradient-to-t from-custom-blue to-custom-red"></div>
-      <div class="relative oferta-wraper w-full h-auto flex flex-col justify-center items-center md:flex-row bg-black">
-        <img class="w-full h-60 lg:h-80" src="@/assets/img/oferta.png" alt="plano plus" />
-        <div
-          class="flex flex-col lg:flex-row w-full m-12 justify-center items-center space-y-5 lg:space-x-6 lg:space-y-0 lg:ml-8">
-          <button
-            class="p-3 lg:p-5 xl:text-xl rounded-xl bg-red-600 hover:bg-gray-400 text-white hover:text-red-600 font-bold hover:cursor-pointer">
-            <span @click="toggleModal">Selecionar Unidade</span>
-          </button>
-        </div>
-      </div>
-    </div>
-
-    <div id="modal-shadow" class="fixed z-10 top-0 left-0 right-0 bottom-0 w-full h-full bg-black/[0.6]"
+        <div id="modal-shadow" class="z-10 absolute top-0 w-full h-screen"
       v-if="showModal" @click="toggleModal">
-      <div id="modal" class="bg-black overflow-y-auto p-6 w-full h-full rounded-xl flex flex-col space-y-5 z-10"
+      <div id="modal" class="bg-black overflow-y-auto p-6 w-full h-full rounded-xl flex flex-col space-y-5"
         @click.stop>
         <div class="flex w-full justify-end space-x-5">
           <span class="text-white font-bold cursor-pointer hover:bg-white hover:text-black"
@@ -53,6 +39,22 @@
         </div>
       </div>
     </div>
+
+
+    <div class="flex flex-col">
+      <div class="h-6 bg-gradient-to-t from-custom-blue to-custom-red"></div>
+      <div class="oferta-wraper w-full h-auto flex flex-col justify-center items-center md:flex-row bg-black">
+        <img class="w-full h-60 lg:h-80" src="@/assets/img/oferta.png" alt="plano plus" />
+        <div
+          class="flex flex-col lg:flex-row w-full m-12 justify-center items-center space-y-5 lg:space-x-6 lg:space-y-0 lg:ml-8">
+          <button
+            class="p-3 lg:p-5 xl:text-xl rounded-xl bg-red-600 hover:bg-gray-400 text-white hover:text-red-600 font-bold hover:cursor-pointer">
+            <span @click="toggleModal">Selecionar Unidade</span>
+          </button>
+        </div>
+      </div>
+    </div>
+
 
     <div class="w-full flex flex-col justify-center items-center px-5 space-y-5 md:space-y-0 md:space-x-12 md:flex-row">
       <div id="carousel" class="relative h-80 w-[80%] md:h-50 md:w-[50%]">
@@ -117,7 +119,7 @@ import { ref, onMounted, onUnmounted, computed } from 'vue';
 import { getSelfit, setAcessos } from '../services/Selfit.js';
 import getGeolocation from '../services/Geolocation.js';
 
-const showModal = ref(false);
+const showModal = ref(true);
 const selfit = ref([]);
 const data = [
   {
