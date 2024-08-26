@@ -48,7 +48,7 @@
           </div>
           <span
             class="flex w-[30%] h-full justify-center items-center text-center text-2xl font-bold border-l-2 border-gray-200"
-            >{{ acessos.length }}</span
+            >{{ totalAcessos }}</span
           >
         </div>
 
@@ -59,7 +59,7 @@
           </div>
           <span
             class="flex w-[30%] h-full justify-center items-center text-center text-2xl font-bold border-l-2 border-gray-200"
-            >{{ obterObjetosUnicosPorIPUnidade().length }}</span
+            >{{ totalAcessosUnicos }}</span
           >
         </div>
 
@@ -70,7 +70,7 @@
           </div>
           <span
             class="flex w-[30%] h-full justify-center items-center text-center text-2xl font-bold border-l-2 border-gray-200"
-            >{{ obterObjetosUnicosPorIPUnidade().length }}</span
+            >{{ totalAcessosPeriodo }}</span
           >
         </div>
       </div>
@@ -156,7 +156,7 @@ import { ref, watch } from 'vue';
 import { onMounted } from 'vue';
 import { useToast } from 'vue-toastification';
 import { FilterMatchMode } from '@primevue/core/api';
-import { getAcessos, getUnidades } from '../services/Selfit';
+import { getUnidades } from '../services/Selfit';
 
 const toast = useToast();
 const uf = ref();
@@ -165,9 +165,11 @@ const bairro = ref();
 const endereco = ref();
 const url = ref();
 const selectedFile = ref();
-const acessos = ref([]);
 const unidades = ref([]);
 const unidadesOriginal = ref([]);
+const totalAcessos = ref(0);
+const totalAcessosUnicos = ref(0);
+const totalAcessosPeriodo = ref(0);
 const dates = ref([]);
 const size = ref({ label: 'G', value: 'large' });
 const filters = ref({
@@ -178,24 +180,39 @@ const filters = ref({
 
 onMounted(async () => {
   /* TODO implementar dados de sessão para unidades e acessos */
-  unidades.value = await getUnidades();
+  unidades.value = await getUnidades(unidades.value);
+  totalAcessos.value = contarTotalAcessos(unidades.value);
 
   /* TODO revisar atualização de tabela quando um periodo for limpado */
-  watch(dates, () => {
-    if (dates.value) {
-      const [startDate, endDate] = dates.value;
+  // watch(dates, () => {
+  //   if (dates.value) {
+  //     const [startDate, endDate] = dates.value;
 
-      if (startDate && endDate) {
-        unidades.value.forEach((unidade, index) => {
-          unidade.acessos = [...filterObjectsByDateRange(unidade.acessos, startDate, endDate)];
-        });
-      }
-    } else {
-      dates.value = [];
-      unidades.value = unidadesOriginal.value;
-    }
-  });
+  //     if (startDate && endDate) {
+  //       unidades.value.forEach((unidade, index) => {
+  //         unidade.acessos = [...filterObjectsByDateRange(unidade.acessos, startDate, endDate)];
+  //       });
+  //     }
+  //   } else {
+  //     dates.value = [];
+  //     unidades.value = unidadesOriginal.value;
+  //   }
+  // });
 });
+
+function contarTotalAcessos(unidades) {
+  const acessosPorUnidade = unidades.map((unidade) => {
+    const acessosValidos = unidade.acessos.filter((acesso) => acesso.geolocation && acesso.geolocation.ip);
+    return acessosValidos;
+  });
+
+  let total = 0;
+  acessosPorUnidade.forEach((acesso) => {
+    total += acesso.length;
+  });
+
+  return total;
+}
 
 function filterObjectsByDateRange(objectsArray, startDateStr, endDateStr) {
   const startDate = Date.parse(startDateStr);
