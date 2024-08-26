@@ -4,9 +4,9 @@
           <img src="./assets/img/banner_maes.png" class="w-full h-full" alt="banner" />
         </header> -->
 
-        <div id="modal-shadow" class="z-10 absolute top-0 w-full h-screen"
+        <div id="modal-shadow" class="z-10 absolute top-0 w-full h-[200vh]"
       v-if="showModal" @click="toggleModal">
-      <div id="modal" class="bg-black overflow-y-auto p-6 w-full h-full rounded-xl flex flex-col space-y-5"
+      <div id="modal" class="bg-black overflow-y-auto p-6 w-full h-[200vh] rounded-xl flex flex-col space-y-5"
         @click.stop>
         <div class="flex w-full justify-end space-x-5">
           <span class="text-white font-bold cursor-pointer hover:bg-white hover:text-black"

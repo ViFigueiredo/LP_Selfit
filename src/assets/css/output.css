@@ -666,6 +666,14 @@ video {
   height: 100vh;
 }
 
+.h-\[200vh\] {
+  height: 200vh;
+}
+
+.h-\[100vh\] {
+  height: 100vh;
+}
+
 .w-7 {
   width: 1.75rem;
 }
