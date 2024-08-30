@@ -179,25 +179,23 @@ const filters = ref({
 });
 
 onMounted(async () => {
-  /* TODO implementar dados de sessão para unidades e acessos */
   unidades.value = await getUnidades(unidades.value);
   totalAcessos.value = contarTotalAcessos(unidades.value);
+  totalAcessosUnicos.value = obterObjetosUnicosPorIPUnidade(unidades.value)
 
-  /* TODO revisar atualização de tabela quando um periodo for limpado */
-  // watch(dates, () => {
-  //   if (dates.value) {
-  //     const [startDate, endDate] = dates.value;
-
-  //     if (startDate && endDate) {
-  //       unidades.value.forEach((unidade, index) => {
-  //         unidade.acessos = [...filterObjectsByDateRange(unidade.acessos, startDate, endDate)];
-  //       });
-  //     }
-  //   } else {
-  //     dates.value = [];
-  //     unidades.value = unidadesOriginal.value;
-  //   }
-  // });
+  /* TODO implementar acessos por periodo */
+  watch(dates, () => {
+    if (dates.value) {
+      const [startDate, endDate] = dates.value;   
+      
+      if (startDate && endDate) {
+        console.log(startDate);
+        console.log(endDate);
+      }
+    } else {
+      dates.value = [];
+    }
+  });
 });
 
 function contarTotalAcessos(unidades) {
@@ -235,11 +233,11 @@ function converterDataHora(dataHora) {
   return dataHoraFormatada;
 }
 
-function obterObjetosUnicosPorIPUnidade() {
+function obterObjetosUnicosPorIPUnidade(unidades) {
   const mapa = new Map();
   const newArray = [];
 
-  unidades.value.forEach((obj) => {
+  unidades.forEach((obj) => {
     obj.acessos.forEach((acesso) => {
       const ip = acesso.geolocation.ip;
       if (!mapa.has(ip)) {
@@ -249,7 +247,7 @@ function obterObjetosUnicosPorIPUnidade() {
     });
   });
 
-  return newArray;
+  return newArray.length;
 }
 
 function obterObjetosUnicosPorIP(arr) {
