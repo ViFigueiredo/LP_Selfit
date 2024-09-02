@@ -194,6 +194,8 @@ onMounted(async () => {
 
       if (startDate && endDate) {
         unidades.value = filterObjectsByDateRange(unidades.value, startDate, endDate);
+        console.log(unidades.value);
+        
       }
     } else {
       dates.value = [];
@@ -202,26 +204,25 @@ onMounted(async () => {
   });
 });
 
-/* TODO: fix acessos dentro de unidades após filtro de datas */
 function filterObjectsByDateRange(objectsArray, startDateStr, endDateStr) {
   const startDate = converteEmMilissegundos(startDateStr);
   const endDate = converteEmMilissegundos(endDateStr);
 
-  objectsArray.map((unidade) => {
+  objectsArray.filter((unidade) => {
     if (unidade && unidade.acessos) {
-      unidade.acessos = unidade.acessos.filter((acesso) => {
+      unidade.acessos.filter((acesso) => {
         const ano = acesso.datetime.slice(6, 10);
         const mes = acesso.datetime.slice(3, 5);
         const dia = acesso.datetime.slice(0, 2);
-        const datetime = new Date(`${ano}-${mes}-${dia}T${acesso.datetime.slice(11)}`);
-        acesso.datetime = converteEmMilissegundos(datetime.toISOString());
+        const datetime = new Date(`${ano}-${mes}-${dia}`);
+        acesso.datetime = converteEmMilissegundos(datetime);
 
         return acesso.datetime >= startDate && acesso.datetime <= endDate;
       });
     }
     return unidade;
   });
-  console.log(objectsArray);
+
   return objectsArray;
 }
 

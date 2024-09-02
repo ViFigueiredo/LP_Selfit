@@ -12,6 +12,6 @@ export default defineConfig({
     }
   },
   server: {
-    hmr: false // desativa o Hot Module Replacement (Hot Reload)
+    hmr: true // ativa ou desativa o Hot Module Replacement (Hot Reload)
   }
 });
