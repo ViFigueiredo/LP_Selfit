@@ -48,8 +48,9 @@
           </div>
           <span
             class="flex w-[30%] h-full justify-center items-center text-center text-2xl font-bold border-l-2 border-gray-200"
-            >{{ totalAcessos }}</span
           >
+            {{ totalAcessos }}
+          </span>
         </div>
 
         <div class="flex rounded-lg w-[200px] h-16 bg-green-400 justify-center items-center">
@@ -59,8 +60,9 @@
           </div>
           <span
             class="flex w-[30%] h-full justify-center items-center text-center text-2xl font-bold border-l-2 border-gray-200"
-            >{{ totalAcessosUnicos }}</span
           >
+            {{ totalAcessosUnicos }}
+          </span>
         </div>
 
         <div class="flex rounded-lg w-[200px] h-16 bg-yellow-400 justify-center items-center">
@@ -70,8 +72,9 @@
           </div>
           <span
             class="flex w-[30%] h-full justify-center items-center text-center text-2xl font-bold border-l-2 border-gray-200"
-            >{{ totalAcessosPeriodo }}</span
           >
+            {{ totalAcessosPeriodo }}
+          </span>
         </div>
       </div>
 
@@ -180,23 +183,51 @@ const filters = ref({
 
 onMounted(async () => {
   unidades.value = await getUnidades(unidades.value);
+  unidadesOriginal.value = unidades.value;
   totalAcessos.value = contarTotalAcessos(unidades.value);
-  totalAcessosUnicos.value = obterObjetosUnicosPorIPUnidade(unidades.value)
+  totalAcessosUnicos.value = obterObjetosUnicosPorIPUnidade(unidades.value);
 
-  /* TODO implementar acessos por periodo */
   watch(dates, () => {
     if (dates.value) {
-      const [startDate, endDate] = dates.value;   
-      
+      const startDate = dates.value[0];
+      const endDate = dates.value[1];
+
       if (startDate && endDate) {
-        console.log(startDate);
-        console.log(endDate);
+        unidades.value = filterObjectsByDateRange(unidades.value, startDate, endDate);
       }
     } else {
       dates.value = [];
+      unidades.value = unidadesOriginal.value;
     }
   });
 });
+
+/* TODO: fix acessos dentro de unidades após filtro de datas */
+function filterObjectsByDateRange(objectsArray, startDateStr, endDateStr) {
+  const startDate = converteEmMilissegundos(startDateStr);
+  const endDate = converteEmMilissegundos(endDateStr);
+
+  objectsArray.map((unidade) => {
+    if (unidade && unidade.acessos) {
+      unidade.acessos = unidade.acessos.filter((acesso) => {
+        const ano = acesso.datetime.slice(6, 10);
+        const mes = acesso.datetime.slice(3, 5);
+        const dia = acesso.datetime.slice(0, 2);
+        const datetime = new Date(`${ano}-${mes}-${dia}T${acesso.datetime.slice(11)}`);
+        acesso.datetime = converteEmMilissegundos(datetime.toISOString());
+
+        return acesso.datetime >= startDate && acesso.datetime <= endDate;
+      });
+    }
+    return unidade;
+  });
+  console.log(objectsArray);
+  return objectsArray;
+}
+
+function converteEmMilissegundos(datetime) {
+  return new Date(datetime).getTime();
+}
 
 function contarTotalAcessos(unidades) {
   const acessosPorUnidade = unidades.map((unidade) => {
@@ -210,27 +241,6 @@ function contarTotalAcessos(unidades) {
   });
 
   return total;
-}
-
-function filterObjectsByDateRange(objectsArray, startDateStr, endDateStr) {
-  const startDate = Date.parse(startDateStr);
-  const endDate = Date.parse(endDateStr);
-
-  return objectsArray.filter((obj) => {
-    const objDate = Date.parse(converterDataHora(obj.datetime + 'Z'));
-
-    return objDate >= startDate && objDate <= endDate;
-  });
-}
-
-function converterDataHora(dataHora) {
-  const [data, hora] = dataHora.split('T'); // Divida a string em data e hora
-  const [dia, mes, ano] = data.split('-'); // Extraia os componentes da data
-  const dataFormatada = `${ano}-${mes.padStart(2, '0')}-${dia.padStart(2, '0')}`; // Formate a data no formato desejado (YYYY-MM-DD)
-  const horaFormatada = 'T03:00:00.000Z'; // Formate a hora no formato desejado (HH:MM:SS.SSSZ)
-  const dataHoraFormatada = `${dataFormatada}${horaFormatada}`; // Combine a data e a hora formatadas
-
-  return dataHoraFormatada;
 }
 
 function obterObjetosUnicosPorIPUnidade(unidades) {
