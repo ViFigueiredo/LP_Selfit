@@ -182,7 +182,15 @@ const filters = ref({
 });
 
 onMounted(async () => {
-  unidades.value = await getUnidades(unidades.value);
+  const storedUnidades = sessionStorage.getItem('unidades');
+
+  if (storedUnidades) {
+    unidades.value = JSON.parse(storedUnidades);
+  } else {
+    unidades.value = await getUnidades(unidades.value);
+    sessionStorage.setItem('unidades', JSON.stringify(unidades.value));
+  }
+
   unidadesOriginal.value = unidades.value;
   totalAcessos.value = contarTotalAcessos(unidades.value);
   totalAcessosUnicos.value = obterObjetosUnicosPorIPUnidade(unidades.value);
@@ -195,7 +203,6 @@ onMounted(async () => {
       if (startDate && endDate) {
         unidades.value = filterObjectsByDateRange(unidades.value, startDate, endDate);
         console.log(unidades.value);
-        
       }
     } else {
       dates.value = [];
