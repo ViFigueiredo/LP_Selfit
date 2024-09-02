@@ -1,6 +1,9 @@
 import db from '../firebase/init.js';
 import { collection, doc, setDoc, getDocs } from 'firebase/firestore';
 import { format } from 'date-fns';
+import { useToast } from 'vue-toastification';
+
+const toast = useToast();
 
 async function setAcessos(unidade, geo) {
   const unidadesRef = collection(db, 'acessos');

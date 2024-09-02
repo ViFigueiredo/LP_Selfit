@@ -96,7 +96,7 @@
         :value="unidades"
       >
         <template #header class="flex">
-          <div class="flex justify-between">
+          <div class="flex space-x-3 justify-between">
             <div class="mt-5">
               <DatePicker
                 v-model="dates"
@@ -112,6 +112,7 @@
             </div>
             <div class="mt-5">
               {{ dates }}
+              <Button label="Atualizar tabela" @click="atualizarTabela()"/>
             </div>
           </div>
         </template>
@@ -157,11 +158,9 @@
 <script lang="js" setup>
 import { ref, watch } from 'vue';
 import { onMounted } from 'vue';
-import { useToast } from 'vue-toastification';
 import { FilterMatchMode } from '@primevue/core/api';
-import { getUnidades } from '../services/Selfit';
+import { getUnidades, setSelfit } from '../services/Selfit';
 
-const toast = useToast();
 const uf = ref();
 const cidade = ref();
 const bairro = ref();
@@ -210,6 +209,11 @@ onMounted(async () => {
     }
   });
 });
+
+function atualizarTabela() {
+  sessionStorage.removeItem('unidades');
+  location.reload()
+}
 
 function filterObjectsByDateRange(objectsArray, startDateStr, endDateStr) {
   const startDate = converteEmMilissegundos(startDateStr);
