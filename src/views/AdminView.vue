@@ -112,7 +112,7 @@
             </div>
             <div class="mt-5">
               {{ dates }}
-              <Button label="Atualizar tabela" @click="atualizarTabela()"/>
+              <Button label="Atualizar tabela" @click="atualizarTabela()" />
             </div>
           </div>
         </template>
@@ -181,13 +181,13 @@ const filters = ref({
 });
 
 onMounted(async () => {
-  const storedUnidades = sessionStorage.getItem('unidades');
+  const storedUnidades = localStorage.getItem('unidades');
 
   if (storedUnidades) {
     unidades.value = JSON.parse(storedUnidades);
   } else {
     unidades.value = await getUnidades(unidades.value);
-    sessionStorage.setItem('unidades', JSON.stringify(unidades.value));
+    localStorage.setItem('unidades', JSON.stringify(unidades.value));
   }
 
   unidadesOriginal.value = unidades.value;
@@ -201,7 +201,6 @@ onMounted(async () => {
 
       if (startDate && endDate) {
         unidades.value = filterObjectsByDateRange(unidades.value, startDate, endDate);
-        console.log(unidades.value);
       }
     } else {
       dates.value = [];
@@ -211,30 +210,41 @@ onMounted(async () => {
 });
 
 function atualizarTabela() {
-  sessionStorage.removeItem('unidades');
-  location.reload()
+  localStorage.removeItem('unidades');
+  location.reload();
 }
 
 function filterObjectsByDateRange(objectsArray, startDateStr, endDateStr) {
   const startDate = converteEmMilissegundos(startDateStr);
   const endDate = converteEmMilissegundos(endDateStr);
 
-  objectsArray.filter((unidade) => {
-    if (unidade && unidade.acessos) {
-      unidade.acessos.filter((acesso) => {
-        const ano = acesso.datetime.slice(6, 10);
-        const mes = acesso.datetime.slice(3, 5);
-        const dia = acesso.datetime.slice(0, 2);
-        const datetime = new Date(`${ano}-${mes}-${dia}`);
-        acesso.datetime = converteEmMilissegundos(datetime);
+  console.log(`Start Date: ${startDate}, End Date: ${endDate}`);
 
-        return acesso.datetime >= startDate && acesso.datetime <= endDate;
-      });
-    }
-    return unidade;
-  });
+  const filteredArray = objectsArray
+    .map((unidade) => {
+      if (unidade && unidade.acessos) {
+        const acessosFiltrados = unidade.acessos.filter((acesso) => {
+          const ano = acesso.datetime.slice(6, 10);
+          const mes = acesso.datetime.slice(3, 5);
+          const dia = acesso.datetime.slice(0, 2);
+          const datetime = new Date(`${ano}-${mes}-${dia}T03:00:00.000Z`);
+          const datetimeMillis = converteEmMilissegundos(datetime);
 
-  return objectsArray;
+          // retornar apenas os acessos dentro do intervalo de datas
+          return datetimeMillis >= startDate && datetimeMillis <= endDate;
+        });
+
+        // Retornar a unidade apenas se houver acessos filtrados
+        if (acessosFiltrados.length > 0) {
+          return { ...unidade, acessos: acessosFiltrados };
+        }
+      }
+
+      return null;
+    })
+    .filter((unidade) => unidade !== null);
+
+  return filteredArray;
 }
 
 function converteEmMilissegundos(datetime) {
