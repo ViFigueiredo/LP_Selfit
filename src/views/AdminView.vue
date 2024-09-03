@@ -76,6 +76,18 @@
             {{ totalAcessosPeriodo }}
           </span>
         </div>
+
+        <div class="flex rounded-lg w-[230px] h-16 bg-red-400 justify-center items-center">
+          <div class="flex flex-col w-[70%]">
+            <span class="flex w-full items-center justify-center text-center material-symbols-outlined"> event </span>
+            <span class="flex w-full items-center justify-center text-center">No período / únicos</span>
+          </div>
+          <span
+            class="flex w-[30%] h-full justify-center items-center text-center text-2xl font-bold border-l-2 border-gray-200"
+          >
+            {{ totalAcessosPeriodoUnicos }}
+          </span>
+        </div>
       </div>
 
       <DataTable
@@ -172,6 +184,7 @@ const unidadesOriginal = ref([]);
 const totalAcessos = ref(0);
 const totalAcessosUnicos = ref(0);
 const totalAcessosPeriodo = ref(0);
+const totalAcessosPeriodoUnicos = ref(0);
 const dates = ref([]);
 const size = ref({ label: 'G', value: 'large' });
 const filters = ref({
@@ -193,6 +206,7 @@ onMounted(async () => {
   unidadesOriginal.value = unidades.value;
   totalAcessos.value = contarTotalAcessos(unidades.value);
   totalAcessosUnicos.value = obterObjetosUnicosPorIPUnidade(unidades.value);
+  totalAcessosPeriodo.value = contarTotalAcessos(unidades.value);
 
   watch(dates, () => {
     if (dates.value) {
@@ -201,9 +215,11 @@ onMounted(async () => {
 
       if (startDate && endDate) {
         unidades.value = filterObjectsByDateRange(unidades.value, startDate, endDate);
+        totalAcessosPeriodo.value = unidades.value.length;
+        totalAcessosPeriodoUnicos.value = obterObjetosUnicosPorIPUnidade(unidades.value);
       }
     } else {
-      dates.value = [];
+      dates.value = [];      
       unidades.value = unidadesOriginal.value;
     }
   });
