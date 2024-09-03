@@ -111,7 +111,7 @@
               />
             </div>
             <div class="mt-5">
-              {{ dates }}
+              <!-- {{ dates }} -->
               <Button label="Atualizar tabela" @click="atualizarTabela()" />
             </div>
           </div>
