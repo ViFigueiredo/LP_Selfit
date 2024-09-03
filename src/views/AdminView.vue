@@ -181,13 +181,13 @@ const filters = ref({
 });
 
 onMounted(async () => {
-  const storedUnidades = localStorage.getItem('unidades');
+  const storedUnidades = sessionStorage.getItem('unidades');
 
   if (storedUnidades) {
     unidades.value = JSON.parse(storedUnidades);
   } else {
     unidades.value = await getUnidades(unidades.value);
-    localStorage.setItem('unidades', JSON.stringify(unidades.value));
+    sessionStorage.setItem('unidades', JSON.stringify(unidades.value));
   }
 
   unidadesOriginal.value = unidades.value;
