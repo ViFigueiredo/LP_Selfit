@@ -104,11 +104,28 @@
       </a>
     </div>
 
+    <div v-if="showLogin" class="w-full flex flex-col justify-center items-center">
+      <form class="flex flex-col space-y-3 border-2 border-red-600 p-3" @submit.prevent="adminPanel()">
+        <div class="space-x-3">
+          <label for="username">username:</label>
+          <input class="p-2" id="username" type="text" v-model="username">
+        </div>
+        <div class="space-x-3">
+          <label for="password">password:</label>
+          <input class="p-2" id="password" type="password" v-model="password">
+        </div>
+        <div class="w-full flex justify-end items-center">
+          <button class="bg-green-600 rounded-md text-white p-2" type="submit">Entrar</button>
+        </div>
+      </form>
+    </div>
+
 
     <footer class="relative bottom-0 w-full flex justify-center items-center text-center p-2 bg-red-600 text-white">
       <span class="w-full">
         2024 Selfit © Todos os direitos reservados. Desenvolvido por Center Soluções.
-        <router-link to="/admin" class="text-red-600 hover:text-white justify-start"> >Admin< </router-link>
+        <span @click="toPanel()" class="text-red-600 justify-start hover:text-white hover:cursor-pointer"> >Admin< 
+        </span>
       </span>
     </footer>
   </div>
@@ -118,7 +135,12 @@
 import { ref, onMounted, onUnmounted, computed } from 'vue';
 import { getSelfit, setAcessos } from '../services/Selfit.js';
 import getGeolocation from '../services/Geolocation.js';
+import { useRouter } from 'vue-router';
 
+const router = useRouter();
+const username = ref('');
+const password = ref('');
+const showLogin = ref(false);
 const showModal = ref(false);
 const selfit = ref([]);
 const data = [
@@ -235,6 +257,20 @@ onMounted(async () => {
 onUnmounted(() => {
   window.removeEventListener('keydown', keydownHandler);
 });
+
+function adminPanel() {
+  if (username.value === 'CenterSelfit@#2024!' && password.value === 'CenterSelfit@#2024!') {
+    showLogin.value = !showLogin.value;
+    sessionStorage.setItem('admin', 'true');
+    router.push('/admin');
+  } else {
+    alert('Login ou senha incorretos');
+  }
+}
+
+function toPanel() {
+  showLogin.value = !showLogin.value;
+}
 
 async function tracker(unidade) {
   const geo = await getGeolocation();
