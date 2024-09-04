@@ -206,7 +206,6 @@ onMounted(async () => {
   unidadesOriginal.value = unidades.value;
   totalAcessos.value = contarTotalAcessos(unidades.value);
   totalAcessosUnicos.value = obterObjetosUnicosPorIPUnidade(unidades.value);
-  totalAcessosPeriodo.value = contarTotalAcessos(unidades.value);
 
   watch(dates, () => {
     if (dates.value) {
@@ -214,27 +213,27 @@ onMounted(async () => {
       const endDate = dates.value[1];
 
       if (startDate && endDate) {
-        unidades.value = filterObjectsByDateRange(unidades.value, startDate, endDate);
-        totalAcessosPeriodo.value = unidades.value.length;
+        unidades.value = filterObjectsByDateRange(unidadesOriginal.value, startDate, endDate);
+        totalAcessosPeriodo.value = contarTotalAcessos(unidades.value);
         totalAcessosPeriodoUnicos.value = obterObjetosUnicosPorIPUnidade(unidades.value);
       }
     } else {
       dates.value = [];      
+      totalAcessosPeriodo.value = 0;
+      totalAcessosPeriodoUnicos.value = 0;
       unidades.value = unidadesOriginal.value;
     }
   });
 });
 
 function atualizarTabela() {
-  localStorage.removeItem('unidades');
+  sessionStorage.removeItem('unidades');
   location.reload();
 }
 
 function filterObjectsByDateRange(objectsArray, startDateStr, endDateStr) {
   const startDate = converteEmMilissegundos(startDateStr);
   const endDate = converteEmMilissegundos(endDateStr);
-
-  console.log(`Start Date: ${startDate}, End Date: ${endDate}`);
 
   const filteredArray = objectsArray
     .map((unidade) => {
