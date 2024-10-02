@@ -93,7 +93,7 @@
 
     <div class="floater-whatsapp">
       <a
-        href="https://api.whatsapp.com/send/?phone=558130481279&amp;source=google_ads&conversion_id=16598474973&conversion_label=Tn9XCJyErsAZEN3B4uo9&;text=Olá!+Gostaria+de+treinar+na Selfit&amp;type=phone_number&amp;app_absent=0">
+        href="https://wa.link/uq6pis">
         <i>
           <svg class="z-10 w-[60px] h-[60px] bg-[#25D366] rounded-full bg-green fixed bottom-5 right-5" viewBox="0 0 24 24"
             fill="none" xmlns="http://www.w3.org/2000/svg">
