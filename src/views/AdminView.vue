@@ -11,16 +11,17 @@
 			<div class="flex space-x-40">
 				<div class="">
 					<h1>Inserir nova unidade:</h1>
-					<form class="flex flex-col space-y-3" @submit.prevent="setSelfit(uf, cidade, bairro, endereço, url)">
+					<form class="flex flex-col space-y-3" @submit.prevent="setSelfit(uf, cidade, bairro, endereço, cep, url)">
 						<div class="space-x-3 space-y-3">
 							<input class="p-2 rounded-lg" type="text" placeholder="UF" v-model="uf" />
 							<input class="p-2 rounded-lg" type="text" placeholder="Cidade" v-model="cidade" />
 						</div>
 						<div class="space-x-3">
 							<input class="p-2 rounded-lg" type="text" placeholder="Bairro" v-model="bairro" />
-							<input class="p-2 rounded-lg" type="text" placeholder="Endereço" v-model="endereço" />
+							<input class="p-2 rounded-lg" type="text" placeholder="CEP" v-model="cep" />
 						</div>
 						<div class="space-y-3">
+							<input class="p-2 rounded-lg" type="text" placeholder="Endereço" v-model="endereço" />
 							<input class="w-full p-2 rounded-lg" type="text" placeholder="URL" v-model="url" />
 							<button class="w-full p-2 rounded-lg bg-blue-400 font-bold text-white hover:text-black" type="submit">
 								Inserir
@@ -177,6 +178,7 @@
 	const cidade = ref();
 	const bairro = ref();
 	const endereço = ref();
+	const cep = ref();
 	const url = ref();
 	const selectedFile = ref();
 	const unidades = ref([]);
@@ -326,7 +328,7 @@
 
 					for (const obj of jsonContent) {
 						console.log('Inserindo unidades...');
-						await setSelfit(obj.UF, obj.CIDADE, obj.BAIRRO, obj.ENDERECO, obj.URL);
+						await setSelfit(obj.UF, obj.CIDADE, obj.BAIRRO, obj.ENDERECO, obj.CEP, obj.URL);
 					}
 
 					toast.success('Unidades inseridas com sucesso!');
