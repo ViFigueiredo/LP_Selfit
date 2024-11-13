@@ -21,7 +21,7 @@
 							<input class="p-2 rounded-lg" type="text" placeholder="CEP" v-model="cep" />
 						</div>
 						<div class="space-y-3">
-							<input class="p-2 rounded-lg" type="text" placeholder="Endereço" v-model="endereço" />
+							<input class="w-full p-2 rounded-lg" type="text" placeholder="Endereço" v-model="endereço" />
 							<input class="w-full p-2 rounded-lg" type="text" placeholder="URL" v-model="url" />
 							<button class="w-full p-2 rounded-lg bg-blue-400 font-bold text-white hover:text-black" type="submit">
 								Inserir
