@@ -21,12 +21,12 @@
             <div v-for="(unidades, cidade) in cidades" :key="cidade">
               <h3 class="cursor-pointer text-white hover:text-red-600 font-bold"
                 @click="toggleUnidades(uf, cidade)">
-                <span class="bolder text-red-600">{{ cidade }}</span>
+                <span class="bolder text-sm text-red-600">{{ cidade }}</span>
               </h3>
               <ul v-if="showUnidades[uf] && showUnidades[uf][cidade]">
                 <li v-for="unidade in unidades" :key="unidade.cidade"
                   class="w-full flex justify-end text-white hover:bg-red-300 hover:text-black">
-                  <a :href="unidade.url" target="_blank" class="flex w-full cursor-pointer font-bold pt-3 space-x-3"
+                  <a :href="unidade.url" target="_blank" class="flex justify-between w-full cursor-pointer font-bold pt-3 space-x-3"
                     @click="tracker(unidade.bairro)">
                     <div class="flex flex-col">
                       <span class="underline text-[12px]">{{ unidade.bairro }}</span>
