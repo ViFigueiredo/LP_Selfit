@@ -29,8 +29,8 @@
                   <a :href="unidade.url" target="_blank" class="flex w-full cursor-pointer font-bold p-3 space-x-3"
                     @click="tracker(unidade.bairro)">
                     <div class="flex flex-col">
-                      <span class="underline">{{ unidade.bairro }}</span>
-                      <span>{{ unidade.endereco }}</span>
+                      <span class="underline text-xs">{{ unidade.bairro }}</span>
+                      <span class="text-xs">{{ unidade.endereco }}</span>
                     </div>
                     <div class="flex items-center bg-red-600 px-3">
                       <link rel="stylesheet"
