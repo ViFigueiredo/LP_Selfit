@@ -19,18 +19,18 @@
           </h2>
           <div v-if="showCidades[uf]" class="border border-2 border-solid border-red-600 p-5">
             <div v-for="(unidades, cidade) in cidades" :key="cidade">
-              <h3 class="cursor-pointer text-white hover:text-red-600 font-bold py-5"
+              <h3 class="cursor-pointer text-white hover:text-red-600 font-bold"
                 @click="toggleUnidades(uf, cidade)">
                 <span class="bolder text-red-600">{{ cidade }}</span>
               </h3>
               <ul v-if="showUnidades[uf] && showUnidades[uf][cidade]">
                 <li v-for="unidade in unidades" :key="unidade.cidade"
                   class="w-full flex justify-end text-white hover:bg-red-300 hover:text-black">
-                  <a :href="unidade.url" target="_blank" class="flex w-full cursor-pointer font-bold p-3 space-x-3"
+                  <a :href="unidade.url" target="_blank" class="flex w-full cursor-pointer font-bold pt-3 space-x-3"
                     @click="tracker(unidade.bairro)">
                     <div class="flex flex-col">
-                      <span class="underline text-xs">{{ unidade.bairro }}</span>
-                      <span class="text-xs">{{ unidade.endereco }}</span>
+                      <span class="underline text-[12px]">{{ unidade.bairro }}</span>
+                      <span class="text-[10px]">{{ unidade.endereco }}</span>
                     </div>
                     <div class="flex items-center bg-red-600 px-3">
                       <link rel="stylesheet"
