@@ -52,7 +52,7 @@
     <div class="flex flex-col">
       <div class="h-6 bg-gradient-to-t from-custom-blue to-custom-red"></div>
       <div class="oferta-wraper w-full h-auto flex flex-col justify-center items-center md:flex-row bg-black">
-        <img class="w-full h-60 lg:h-80" src="@/assets/img/oferta2.png" alt="plano plus" />
+        <img class="w-full h-60 lg:h-[350px]" src="@/assets/img/99_primeiro_mes.jpg" alt="plano plus" />
         <div
           class="flex flex-col lg:flex-row w-full m-12 justify-center items-center space-y-5 lg:space-x-6 lg:space-y-0 lg:ml-8">
           <button
