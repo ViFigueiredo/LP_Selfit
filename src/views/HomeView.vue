@@ -51,12 +51,12 @@
 
     <div class="flex flex-col">
       <div class="h-6 bg-gradient-to-t from-custom-blue to-custom-red"></div>
-      <div class="oferta-wraper w-full h-auto flex flex-col justify-center items-center md:flex-row bg-black">
-        <img class="w-full h-60 lg:h-[350px]" src="@/assets/img/99_primeiro_mes.jpg" alt="plano plus" />
+      <div class="relative oferta-wraper w-full h-auto flex flex-col justify-center items-center md:flex-row bg-black">
+        <img class="w-full h-60 lg:h-[350px]" src="@/assets/img/Banner-2025-verao.png" alt="plano plus" />
         <div
-          class="flex flex-col lg:flex-row w-full m-12 justify-center items-center space-y-5 lg:space-x-6 lg:space-y-0 lg:ml-8">
+          class="absolute bottom-0 flex flex-col lg:flex-row w-full m-12 justify-center items-center space-y-5 lg:space-x-6 lg:space-y-0 lg:ml-8">
           <button
-            class="p-3 lg:p-5 xl:text-xl rounded-xl bg-red-600 hover:bg-gray-400 text-white hover:text-red-600 font-bold hover:cursor-pointer">
+            class="p-3 xl:text-xl rounded-xl bg-red-600 hover:bg-gray-400 text-white hover:text-red-600 font-bold hover:cursor-pointer">
             <span @click="toggleModal">Selecionar Unidade</span>
           </button>
         </div>
