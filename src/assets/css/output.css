@@ -1130,22 +1130,6 @@ body {
     margin-left: 2rem;
   }
 
-  .lg\:h-80 {
-    height: 20rem;
-  }
-
-  .lg\:h-\[120px\] {
-    height: 120px;
-  }
-
-  .lg\:h-\[200px\] {
-    height: 200px;
-  }
-
-  .lg\:h-\[300px\] {
-    height: 300px;
-  }
-
   .lg\:h-\[350px\] {
     height: 350px;
   }
@@ -1164,10 +1148,6 @@ body {
     --tw-space-y-reverse: 0;
     margin-top: calc(0px * calc(1 - var(--tw-space-y-reverse)));
     margin-bottom: calc(0px * var(--tw-space-y-reverse));
-  }
-
-  .lg\:p-5 {
-    padding: 1.25rem;
   }
 }
 
