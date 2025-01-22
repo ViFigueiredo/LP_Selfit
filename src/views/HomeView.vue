@@ -1,9 +1,5 @@
 <template>
   <div class="space-y-12">
-    <!-- <header class="relative w-full h-full">
-          <img src="./assets/img/banner_maes.png" class="w-full h-full" alt="banner" />
-        </header> -->
-
     <div
       id="modal-shadow"
       class="z-10 absolute top-0 w-full h-screen bg-red-300"
@@ -396,7 +392,6 @@ function toggleCidades(uf) {
 }
 
 async function toggleModal(event) {
-  //selfit.value = await getSelfit();
   selfit.value = await fetchUnidades();
   //console.log(selfit.value);
 
