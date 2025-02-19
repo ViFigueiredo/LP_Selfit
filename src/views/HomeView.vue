@@ -16,7 +16,7 @@
           <div v-if="showCidades[uf]" class="border border-2 border-solid border-red-600 p-5">
             <div v-for="(unidades, cidade) in cidades" :key="cidade">
               <h3 class="cursor-pointer text-white hover:text-red-600 font-bold" @click="toggleUnidades(uf, cidade)">
-                <span class="bolder text-xs text-red-600">{{ cidade }}</span>
+                <span class="bolder text-xs text-red-600">{{ cidade.toUpperCase() }}</span>
               </h3>
               <ul v-if="showUnidades[uf] && showUnidades[uf][cidade]">
                 <li v-for="unidade in unidades" :key="unidade.cidade"
