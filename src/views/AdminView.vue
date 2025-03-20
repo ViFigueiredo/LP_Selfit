@@ -64,12 +64,12 @@
 
       <DataTable class="w-full h-[650px] overflow-auto" sortMode="multiple" optionLabel="label" dataKey="label"
         scrollHeight="75%" columnResizeMode="fit" filterDisplay="row" scrollable removableSort resizableColumns
-        showGridlines v-model:filters="filters" :globalFilterFields="['uf', 'cidade', 'bairro']" :size="size.value"
-        :value="unidades">
+        showGridlines v-model:filters="filters" :globalFilterFields="['created_at', 'uf', 'cidade', 'bairro']"
+        :size="size.value" :value="unidades">
 
         <!-- {{ unidades }} -->
 
-        {{ dates }}
+        <!-- {{ dates }} -->
 
         <template #header class="flex">
           <div class="flex space-x-3 justify-between">
@@ -82,6 +82,16 @@
             </div>
           </div>
         </template>
+
+        <Column field="created_at" header="Criado em" sortable>
+          <!-- <template #filter="{ filterModel, filterCallback }" class="w-full">
+            <InputText class="w-full" v-model="filterModel.value" type="text" @input="filterCallback()"
+              placeholder="Pesquisar..." />
+          </template> -->
+          <!-- <template #body="slotProps">
+            {{ formatDate(slotProps.data.created_at) }}
+          </template> -->
+        </Column>
 
         <Column field="uf" header="UF" sortable>
           <template #filter="{ filterModel, filterCallback }" class="w-full">
@@ -141,6 +151,7 @@ const dates = ref([]);
 const size = ref({ label: "G", value: "large" });
 const filters = ref({
   global: { value: null, matchMode: FilterMatchMode.CONTAINS },
+  created_at: { value: null, matchMode: FilterMatchMode.CONTAINS },
   uf: { value: null, matchMode: FilterMatchMode.CONTAINS },
   cidade: { value: null, matchMode: FilterMatchMode.CONTAINS },
   bairro: { value: null, matchMode: FilterMatchMode.CONTAINS },
@@ -281,4 +292,21 @@ function filtrarAcessosUnicosPorUnidade(acessos) {
     return false;
   });
 }
+
+function formatDate(isoString) {
+  // Converte a string ISO em um objeto Date
+  const date = new Date(isoString);
+
+  // Extrai os componentes da data
+  const day = String(date.getDate()).padStart(2, '0'); // Dia
+  const month = String(date.getMonth() + 1).padStart(2, '0'); // Mês (0-11, então adicionamos 1)
+  const year = date.getFullYear(); // Ano
+  const hours = String(date.getHours()).padStart(2, '0'); // Horas
+  const minutes = String(date.getMinutes()).padStart(2, '0'); // Minutos
+  const seconds = String(date.getSeconds()).padStart(2, '0'); // Segundos
+
+  // Retorna a data formatada
+  return `${day}/${month}/${year} ${hours}:${minutes}:${seconds}`;
+}
+
 </script>
