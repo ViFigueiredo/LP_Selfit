@@ -141,8 +141,8 @@
 
 <script setup lang="js">
 import { ref, onMounted, onUnmounted, computed } from "vue";
-import { supabase } from "../supabase/init.js";
-import { setAcessos } from "../services/Selfit.js";
+import { fetchUnidades } from "../supabase/unidades.js";
+import { setAcessos } from "../supabase/acessos.js";
 import getGeolocation from "../services/Geolocation.js";
 import { useRouter } from "vue-router";
 
@@ -300,17 +300,6 @@ function toggleUnidades(uf, cidade) {
   showUnidades.value[uf][cidade] = !showUnidades.value[uf][cidade];
 }
 
-async function fetchUnidades() {
-  const { data, error } = await supabase.from("unidades").select("*");
-
-  if (error) {
-    console.error("Erro ao buscar unidades:", error.message);
-  } else {
-    console.log("Unidades:", data);
-  }
-
-  return data;
-}
 
 function toggleCidades(uf) {
   showCidades.value[uf] = !showCidades.value[uf];
