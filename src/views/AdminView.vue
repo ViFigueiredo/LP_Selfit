@@ -122,7 +122,7 @@
 </template>
 
 <script lang="js" setup>
-import { ref, watch } from "vue";
+import { ref, watch, computed } from "vue";
 import { onMounted } from "vue";
 import { getAcessosPorUnidade } from "../supabase/acessos.js";
 import { FilterMatchMode } from "@primevue/core/api";
@@ -145,49 +145,79 @@ const filters = ref({
 });
 
 onMounted(async () => {
-  unidades.value = await getAcessosPorUnidade();
-  unidadesOriginal.value = unidades.value;
+  unidadesOriginal.value = await getAcessosPorUnidade();
+  unidades.value = [...unidadesOriginal.value];
   totalAcessos.value = contarTotalAcessos(unidades.value);
   totalAcessosUnicos.value = contarTotalAcessosUnicos(unidades.value);
 
   watch(dates, () => {
-    if (dates.value && dates.value.length === 2) {
-      const startDate = dates.value[0];
-      const endDate = dates.value[1];
-
-      if (startDate && endDate) {
-        unidades.value = filterObjectsByDateRange(unidadesOriginal.value, startDate, endDate);
-        totalAcessosPeriodo.value = contarTotalAcessos(unidades.value);
-        totalAcessosPeriodoUnicos.value = contarTotalAcessosUnicos(unidades.value);
-      }
-    } else {
-      unidades.value = [...unidadesOriginal.value];
-      totalAcessosPeriodo.value = totalAcessos.value;
-      totalAcessosPeriodoUnicos.value = totalAcessosUnicos.value;
-    }
+    aplicarFiltros();
   });
+
+  watch(filters, () => {
+    aplicarFiltros();
+  }, { deep: true });
 });
 
-
 async function atualizarTabela() {
-  unidades.value = [];
-  unidades.value = await getAcessosPorUnidade();
+  unidadesOriginal.value = await getAcessosPorUnidade();
+  aplicarFiltros();
+}
+
+function aplicarFiltros() {
+  let filteredUnidades = [...unidadesOriginal.value];
+
+  // Filtragem por data
+  if (dates.value && dates.value.length === 2) {
+    const startDate = dates.value[0];
+    const endDate = dates.value[1];
+    filteredUnidades = filterObjectsByDateRange(filteredUnidades, startDate, endDate);
+  }
+
+  // Filtragem por texto
+  if (filters.value.global.value) {
+    const globalFilter = filters.value.global.value.toLowerCase();
+    filteredUnidades = filteredUnidades.filter(unidade => {
+      return (
+        unidade.uf.toLowerCase().includes(globalFilter) ||
+        unidade.cidade.toLowerCase().includes(globalFilter) ||
+        unidade.bairro.toLowerCase().includes(globalFilter)
+      );
+    });
+  }
+
+  // Filtragem específica
+  if (filters.value.uf.value) {
+    const ufFilter = filters.value.uf.value.toLowerCase();
+    filteredUnidades = filteredUnidades.filter(unidade => unidade.uf.toLowerCase().includes(ufFilter));
+  }
+
+  if (filters.value.cidade.value) {
+    const cidadeFilter = filters.value.cidade.value.toLowerCase();
+    filteredUnidades = filteredUnidades.filter(unidade => unidade.cidade.toLowerCase().includes(cidadeFilter));
+  }
+
+  if (filters.value.bairro.value) {
+    const bairroFilter = filters.value.bairro.value.toLowerCase();
+    filteredUnidades = filteredUnidades.filter(unidade => unidade.bairro.toLowerCase().includes(bairroFilter));
+  }
+
+  unidades.value = filteredUnidades;
+  totalAcessos.value = contarTotalAcessos(unidades.value);
+  totalAcessosUnicos.value = contarTotalAcessosUnicos(unidades.value);
+  totalAcessosPeriodo.value = contarTotalAcessos(unidades.value);
+  totalAcessosPeriodoUnicos.value = contarTotalAcessosUnicos(unidades.value);
 }
 
 function filterObjectsByDateRange(objectsArray, startDateStr, endDateStr) {
   const startDate = converteEmMilissegundos(startDateStr);
   const endDate = converteEmMilissegundos(endDateStr);
 
-  const filteredArray = objectsArray
+  return objectsArray
     .map((unidade) => {
       if (unidade && unidade.acessos) {
         const acessosFiltrados = unidade.acessos.filter((acesso) => {
-          const ano = acesso.datetime.slice(6, 10);
-          const mes = acesso.datetime.slice(3, 5);
-          const dia = acesso.datetime.slice(0, 2);
-          const datetime = new Date(`${ano}-${mes}-${dia}T03:00:00.000Z`);
-          const datetimeMillis = converteEmMilissegundos(datetime);
-
+          const datetimeMillis = converteEmMilissegundos(acesso.datetime);
           return datetimeMillis >= startDate && datetimeMillis <= endDate;
         });
 
@@ -195,12 +225,9 @@ function filterObjectsByDateRange(objectsArray, startDateStr, endDateStr) {
           return { ...unidade, acessos: acessosFiltrados };
         }
       }
-
       return null;
     })
     .filter((unidade) => unidade !== null);
-
-  return filteredArray;
 }
 
 function converteEmMilissegundos(datetime) {
@@ -239,6 +266,4 @@ function filtrarAcessosUnicosPorUnidade(acessos) {
     return false;
   });
 }
-
-
 </script>
