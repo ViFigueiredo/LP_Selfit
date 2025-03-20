@@ -69,6 +69,8 @@
 
         <!-- {{ unidades }} -->
 
+        {{ dates }}
+
         <template #header class="flex">
           <div class="flex space-x-3 justify-between">
             <div class="mt-5">
@@ -122,7 +124,7 @@
 </template>
 
 <script lang="js" setup>
-import { ref, watch, computed } from "vue";
+import { ref, watch } from "vue";
 import { onMounted } from "vue";
 import { getAcessosPorUnidade } from "../supabase/acessos.js";
 import { FilterMatchMode } from "@primevue/core/api";
@@ -169,9 +171,14 @@ function aplicarFiltros() {
 
   // Filtragem por data
   if (dates.value && dates.value.length === 2) {
-    const startDate = dates.value[0];
-    const endDate = dates.value[1];
-    filteredUnidades = filterObjectsByDateRange(filteredUnidades, startDate, endDate);
+
+    // Verifique se ambas as datas são válidas
+    if (dates.value[0] && dates.value[1]) {
+      // console.log('Selected Dates:', dates.value); // Verifique as datas selecionadas
+      filteredUnidades = filterObjectsByDateRange(filteredUnidades, dates.value);
+    } else {
+      console.warn('Uma ou ambas as datas estão nulas.');
+    }
   }
 
   // Filtragem por texto
@@ -209,29 +216,37 @@ function aplicarFiltros() {
   totalAcessosPeriodoUnicos.value = contarTotalAcessosUnicos(unidades.value);
 }
 
-function filterObjectsByDateRange(objectsArray, startDateStr, endDateStr) {
-  const startDate = converteEmMilissegundos(startDateStr);
-  const endDate = converteEmMilissegundos(endDateStr);
+function filterObjectsByDateRange(objectsArray, dates) {
+  // Converte as strings de data ISO para objetos Date
+  const startDate = new Date(dates[0]).getTime();
+
+  // Define o endDate como o final do dia da data selecionada
+  const endDate = new Date(dates[1]);
+  endDate.setHours(23, 59, 59, 999); // Define o final do dia
+  const endDateMillis = endDate.getTime();
+
+  // Verifique se as datas foram convertidas corretamente
+  // console.log('Start Date:', startDate);
+  // console.log('End Date:', endDateMillis);
 
   return objectsArray
     .map((unidade) => {
       if (unidade && unidade.acessos) {
+        // Filtra os acessos com base na data
         const acessosFiltrados = unidade.acessos.filter((acesso) => {
-          const datetimeMillis = converteEmMilissegundos(acesso.datetime);
-          return datetimeMillis >= startDate && datetimeMillis <= endDate;
+          const acessoDate = new Date(acesso.created_at).getTime(); // Use 'created_at' do acesso
+          // console.log('Access Date:', acessoDate);
+          return acessoDate >= startDate && acessoDate <= endDateMillis;
         });
 
+        // Retorna a unidade apenas se houver acessos filtrados
         if (acessosFiltrados.length > 0) {
           return { ...unidade, acessos: acessosFiltrados };
         }
       }
-      return null;
+      return null; // Retorna null se não houver acessos
     })
-    .filter((unidade) => unidade !== null);
-}
-
-function converteEmMilissegundos(datetime) {
-  return new Date(datetime).getTime();
+    .filter((unidade) => unidade !== null); // Remove unidades nulas
 }
 
 function contarTotalAcessos(unidades) {
