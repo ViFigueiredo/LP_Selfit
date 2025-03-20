@@ -200,7 +200,7 @@ onMounted(async () => {
   if (storedUnidades) {
     unidades.value = JSON.parse(storedUnidades);
   } else {
-    unidades.value = await getUnidades(unidades.value);
+    unidades.value = await getUnidades();
     sessionStorage.setItem("unidades", JSON.stringify(unidades.value));
   }
 
