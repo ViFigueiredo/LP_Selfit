@@ -177,7 +177,7 @@
 <script lang="js" setup>
 import { ref, watch } from "vue";
 import { onMounted } from "vue";
-import { getUnidades } from "../services/Selfit";
+import { fetchUnidades } from "../supabase/unidades";
 import { FilterMatchMode } from "@primevue/core/api";
 
 const unidades = ref([]);

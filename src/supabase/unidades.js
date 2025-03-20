@@ -1,4 +1,4 @@
-import { supabase } from './supabase/init.js'
+import { supabase } from './init'
 
 async function fetchUnidades() {
   const { data, error } = await supabase.from('unidades').select('*')

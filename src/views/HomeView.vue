@@ -300,7 +300,6 @@ function toggleUnidades(uf, cidade) {
   showUnidades.value[uf][cidade] = !showUnidades.value[uf][cidade];
 }
 
-
 function toggleCidades(uf) {
   showCidades.value[uf] = !showCidades.value[uf];
 }

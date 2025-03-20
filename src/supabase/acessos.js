@@ -1,4 +1,4 @@
-import { supabase } from './supabase/init.js';
+import { supabase } from './init.js';
 
 async function setAcessos(unidade, geo) {
   const { error } = await supabase.from('acessos').insert([
