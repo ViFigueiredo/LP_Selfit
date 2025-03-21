@@ -83,16 +83,6 @@
           </div>
         </template>
 
-        <Column field="created_at" header="Criado em" sortable>
-          <!-- <template #filter="{ filterModel, filterCallback }" class="w-full">
-            <InputText class="w-full" v-model="filterModel.value" type="text" @input="filterCallback()"
-              placeholder="Pesquisar..." />
-          </template> -->
-          <!-- <template #body="slotProps">
-            {{ formatDate(slotProps.data.created_at) }}
-          </template> -->
-        </Column>
-
         <Column field="uf" header="UF" sortable>
           <template #filter="{ filterModel, filterCallback }" class="w-full">
             <InputText class="w-full" v-model="filterModel.value" type="text" @input="filterCallback()"
